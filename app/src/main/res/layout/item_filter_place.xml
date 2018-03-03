@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:orientation="horizontal">
+
+    <Spinner
+        android:id="@+id/type_of_seat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/type_seat"
+        android:layout_weight="3"/>
+
+    <EditText
+        android:id="@+id/filter_number"
+        style="@style/FieldFont"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="0"
+        android:layout_weight="3"
+        android:inputType="numberSigned"/>
+    <ImageButton
+        android:id="@+id/btn_del_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/btn_minus"
+        android:contentDescription="remove"
+        android:layout_weight="1"/>
+</LinearLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="period_for_check">
+        <item>пол часа</item>
+        <item>1 час</item>
+        <item>2 часа</item>
+        <item>3 часа</item>
+        <item>1 день</item>
+        <item>1 неделя</item>
+    </string-array>
+
+    <string-array name="period_for_check_in_seconds">
+        <item>пол часа</item>
+        <item>1 час</item>
+        <item>2 часа</item>
+        <item>3 часа</item>
+        <item>1 день</item>
+        <item>1 неделя</item>
+    </string-array>
+
+    <string-array name="type_seat">
+        <item>П</item>
+        <item>К</item>
+        <item>Л</item>
+    </string-array>
+</resources>

@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Найди свой поезд</string>
+    <string name="search_train">Найти поезд</string>
+    <string name="settings_data_title">Данные для поиска</string>
+    <string name="message_expired_date">Дата для поиска уже прошла</string>
+    <string name="message_no_data_for_search">Для поиска поездов возпользуйтесь главной кнопкой</string>
+    <string name="message_searching_now">Идет поиск поездов по Вашему запросу</string>
+
+    <string name="from">От</string>
+    <string name="to">До</string>
+    <string name="place_number">Сообщать при минимальном наличии мест</string>
+    <string name="periodic">Проверять периодически</string>
+    <string name="search">Искать</string>
+    <string name="Date">Дата</string>
+    <string name="input_date">Дата</string>
+    <string name="all_place">Всех</string>
+
+    <string name="places">Свободные места</string>
+
+    <string name="notification_title">Найдены поезда</string>
+    <!--  <string name="error_station_to">Выберете станцию прибытия из списка</string>
+    <string name="error_station_to">Выберете станцию прибытия из списка</string>-->
+
+    <string name="error_date">Выберете дату</string>
+    <string name="error_station_from">Выберете станцию отправления из списка</string>
+    <string name="error_station_to">Выберете станцию прибытия из списка</string>
+
+
+    <string name="period_half_hour">пол часа</string>
+    <string name="period_one_hour">1 час</string>
+    <string name="period_two_hour">2 часа</string>
+    <string name="period_three_hour">3 часа</string>
+    <string name="period_one_day">1 день</string>
+    <string name="period_one_week">1 неделя</string>
+
+    <string name="action_settings">Settings</string>
+
+
+</resources>

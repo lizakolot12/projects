@@ -1,0 +1,62 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="ActivedHintText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/colorTextTitleActivated</item>
+        <item name="android:typeface">monospace</item>
+        <item name="colorControlActivated">@color/colorTextField</item>
+    </style>
+
+
+    <style name="ErrorText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="NormalHintText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColorHint">@color/colorTextTitle</item>
+    </style>
+
+    <style name="TitleFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorTextTitle</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="FieldFont" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorTextField</item>
+        <item name="android:typeface">normal</item>
+
+    </style>
+
+
+    <style name="CustomEditText" >
+        <item name="colorControlNormal">@color/colorTextField</item>
+        <item name="colorControlActivated">@color/colorTextField</item>
+        <item name="colorControlHighlight">@color/colorTextField</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>
