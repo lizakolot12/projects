@@ -16,8 +16,6 @@ class ContentActivity : AppCompatActivity() {
     private var fragment: Fragment? = null
 
     companion object {
-
-        // private val INTENT_USER_ID = "user_id"
         private val NAME_FRAGMENT_CONTENT = " content_fr"
 
         fun newIntent(context: Context): Intent {
@@ -37,7 +35,6 @@ class ContentActivity : AppCompatActivity() {
             startActivity(SettingsActivity.newIntent(baseContext))
         }
         changeFragment()
-        //
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -55,7 +52,6 @@ class ContentActivity : AppCompatActivity() {
             /*    ft.setCustomAnimations(
                         R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_popup_enter, R.anim.abc_popup_exit);*/
             ft.replace(R.id.fragment, fragment, NAME_FRAGMENT_CONTENT);
-            // ft.addToBackStack(null);
             ft.commit()
         }
 

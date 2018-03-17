@@ -24,7 +24,7 @@ class SettingsStorage {
     val dividerWords: String = ":"
 
     companion object {
-        val LOCALE_NEUTRAL_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy'T'HH:mm:ss")
+        val LOCALE_NEUTRAL_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss")
     }
 
     private var context: Context = MainApplication.instance.baseContext
@@ -61,7 +61,7 @@ class SettingsStorage {
 
         var result: String = ""
         list?.forEach {
-            result += dividerItem + it.id + dividerWords + it.code + dividerWords + it.amount
+            result += dividerItem +it.code + dividerWords + it.amount
             Log.e("my test", result)
         }
         return result
@@ -73,7 +73,7 @@ class SettingsStorage {
         for (str in list) {
             var listItem = str.split(dividerWords)
             if (listItem.size < 2) continue
-            var seatType = SeatFilter(listItem.get(0).toIntOrNull(), listItem.get(1), listItem.get(2).toIntOrNull())
+            var seatType = SeatFilter(0, listItem.get(0), listItem.get(1).toIntOrNull())
             result.add(seatType)
         }
         return result

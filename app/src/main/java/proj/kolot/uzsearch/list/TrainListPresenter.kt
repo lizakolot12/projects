@@ -12,14 +12,15 @@ import proj.kolot.uzsearch.data.TransportRoute
 import proj.kolot.uzsearch.main.TrainsRouteSearcher
 import proj.kolot.uzsearch.settings.SeatFilter
 import proj.kolot.uzsearch.settings.SettingsStorage
+import proj.kolot.uzsearch.utils.filterRoutes
 import javax.inject.Inject
 
 //https://habrahabr.ru/post/275255/
 @InjectViewState
 class TrainListPresenter : MvpPresenter<ListTrainView>() {
+
     @Inject
     lateinit var trainsSearcher: TrainsRouteSearcher
-
 
     @Inject
     lateinit var settingsStorage: SettingsStorage
@@ -87,29 +88,15 @@ class TrainListPresenter : MvpPresenter<ListTrainView>() {
         }
     }
 
-    private fun processingResult(result: Response): List<TransportRoute> {
-        var processedResult: MutableList<TransportRoute> = ArrayList<TransportRoute>()
-        var filters = settingsStorage.getFilters()
-        var mapFilters: Map<String, Int> = convertListToMap(filters)
-        Log.e("my test", " map filters size " + mapFilters.size)
-        result?.list?.forEach {
-            var fail = false
-            if (filters.size > 0 && it.freeSeatsCountByType?.size == 0) {
-                fail = true
-            }
-            it.freeSeatsCountByType?.forEach { t, u ->
-                Log.e("my test", " for each for seats count " + t + "   " + u)
-                var needPlace = mapFilters.get(t.id)
-                if (u < needPlace ?: 0) {
-                    fail = true
-                }
-            }
-            if (!fail) {
-                processedResult.add(it)
-            }
 
-        }
-        return processedResult
+    private fun processingResult(result: Response): List<TransportRoute> {
+        val filters = settingsStorage.getFilters()
+        val mapFilters: Map<String, Int> = convertListToMap(filters)
+        val list:List<TransportRoute> ? = result.list
+        Log.e("my test", " map filters size " + mapFilters.size)
+        if (list== null) return emptyList() else return filterRoutes(list, mapFilters)
+
+
     }
 
     private fun convertListToMap(list: List<SeatFilter>): Map<String, Int> {

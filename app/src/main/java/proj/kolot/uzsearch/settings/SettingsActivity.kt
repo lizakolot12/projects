@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
             val ft = fragmentManager.beginTransaction();
             fragment = SettingsFragment()
             ft.replace(R.id.fragment, fragment, NAME_SETTINGS_FRAGMENT);
-            ft.commit();
+            ft.commit()
         }
     }
 }

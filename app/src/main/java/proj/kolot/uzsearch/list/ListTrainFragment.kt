@@ -61,9 +61,9 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     }
 
     override fun showProgress() {
+        showErrorMessage(getString(R.string.message_searching_now))
         trainsView.visibility = View.GONE
         progress.visibility = View.VISIBLE
-        showErrorMessage(getString(R.string.message_searching_now))
         Log.e("my test", "show progress and will be on trains loaded with empty list")
 
 
@@ -106,8 +106,6 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
         val view = container?.inflate(R.layout.fragment_list_train)
         Log.e("my test", " on createview in listtrainfragment")
         //mPresenter.loadTrains()
-
-
         return view
     }
 

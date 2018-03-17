@@ -24,30 +24,24 @@ class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
         this.mList = list
     }
 
-    /**
-     * Создание новых View и ViewHolder элемента списка, которые впоследствии могут переиспользоваться.
-     */
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         var v = LayoutInflater.from(viewGroup.context).inflate(R.layout.train_item_layout, viewGroup, false);
         return ViewHolder(v);
     }
 
-    /**
-     * Заполнение виджетов View данными из элемента списка с номером i
-     */
-    override
-    fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         var train: TransportRoute = mList[i]
         var places: String = viewHolder.itemView.context.getString(R.string.places)
         var dateDeparture: String = SettingsStorage.LOCALE_NEUTRAL_DATE_TIME_FORMATTER.print(train.departureDate)
         var dateArrival: String = SettingsStorage.LOCALE_NEUTRAL_DATE_TIME_FORMATTER.print(train.arrivalDate)
         var seats: String = ""
-        //train.freeSeatsCountByType?.forEach { seatType, amount -> seats += seatType.id + "=" + amount + "     " }
-        for (map:Map.Entry<SeatType, Int> in train.freeSeatsCountByType?: emptyMap())
-        {seats += map.key.id + "=" + map.value + "     "}
+        for (map: Map.Entry<SeatType, Int> in train.freeSeatsCountByType ?: emptyMap()) {
+            seats += map.key.id + "=" + map.value + "     "
+        }
 
         var description = train.name + "  \n" + places + ":" + seats + "   \n" +
-        dateDeparture + "  \n" + dateArrival + "  "
+                dateDeparture + "  \n" + dateArrival + "  "
         viewHolder.idTrain.text = train.id
         viewHolder.description.text = description
 
@@ -58,9 +52,6 @@ class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
         return mList.size
     }
 
-    /**
-     * Реализация класса ViewHolder, хранящего ссылки на виджеты.
-     */
 
     class ViewHolder : RecyclerView.ViewHolder {
 

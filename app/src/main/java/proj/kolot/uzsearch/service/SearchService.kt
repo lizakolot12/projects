@@ -34,9 +34,9 @@ class SearchService : IntentService("SearchService") {
     @Inject
     lateinit var mRouteService: TrainsRouteSearcher
 
-   /* init {
+ init {
         MainApplication.graph.inject(this)
-    }*/
+    }
 
 
     override fun onHandleIntent(intent: Intent) {

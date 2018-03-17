@@ -2,7 +2,6 @@ package proj.kolot.uzsearch.settings
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -27,10 +26,10 @@ import proj.kolot.uzsearch.utils.DelayAutoCompleteTextView
 
 class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSetListener {
 
-    private var unsavedSettings: SettingsStorage.Settings? = null //сделать чтоб это было неизменяемые даные а изменяться только через презентер
     private var filtersViews = ArrayList<ViewGroup>()
+    private var unsavedSettings: SettingsStorage.Settings? = null
 
-    @InjectPresenter (type = PresenterType.LOCAL, tag = "SettingsPresenter")
+    @InjectPresenter(type = PresenterType.LOCAL, tag = "SettingsPresenter")
     lateinit var mPresenter: SettingsPresenter
 
 
@@ -38,6 +37,10 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         val intent = ContentActivity.newIntent(activity)
         startActivity(intent)
         //   https://habrahabr.ru/company/redmadrobot/blog/325816/
+    }
+
+    override fun setInitialSettings(settings: SettingsStorage.Settings?) {
+        this.unsavedSettings = settings
     }
 
     override fun showErrorInputData(list: List<Integer>) {
@@ -71,32 +74,73 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
             }
         }
     }
+    override fun setInitialStationFrom() {
+        var station: Station = unsavedSettings?.stationFrom ?: Station("", "")
+        setAutoCompleteStation(view.station_from, view.progress_bar_from, station, SettingsPresenter.TAG_STATION_FROM)
+
+    }
+    override fun setInitialStationTo() {
+        var station: Station = unsavedSettings?.stationTo ?: Station("", "")
+        setAutoCompleteStation(view.station_to, view.progress_bar_to, station, SettingsPresenter.TAG_STATION_TO)
+    }
+    /*addTextChangedListener(object : TextWatcher {
+                 override fun afterTextChanged(s: Editable) {
+                     mPresenter.afterTextChanged(tag, s.toString(), getTag().toString())
+                 }
+
+                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                 }
+
+                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                 }
+             })*/
+    private fun setAutoCompleteStation(textView: DelayAutoCompleteTextView, progressBar: ProgressBar, station: Station?, tag: String) {
+        with(textView) {
+            setText(station?.name)
+            threshold = 2
+            var initial: ArrayList<Station> = ArrayList()
+            if (station != null) {
+                initial.add(station)
+            }
+            var adapter = StationAutoCompleteAdapter(context, mPresenter, initial)
+            setAdapter(adapter)
+            setLoadingIndicator(progressBar)
+            onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
+                val station = adapterView.getItemAtPosition(position) as Station
+                mPresenter.onInputStation(tag, station)
+            }
+        }
+    }
 
     override fun setInitialDate() {
-        // unsavedSettings?.dateRoute = inputDate
         var inputDate: LocalDateTime = unsavedSettings?.dateRoute ?: LocalDateTime.now()
         showDate.text = formatDataText(inputDate)
         showDate.setOnClickListener { showDataPicker(inputDate) }
     }
 
+    private fun formatDataText(initialDate: LocalDateTime): String {
+        return "${formatNumber(initialDate.dayOfMonth)} / ${formatNumber(initialDate.monthOfYear)} / ${initialDate.year}"
+    }
+    private fun showDataPicker(initialDate: LocalDateTime) {
+        DatePickerDialog(activity, this, initialDate.year, initialDate.monthOfYear - 1, initialDate.dayOfMonth).show()
+    }
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val date = LocalDateTime(year, month + 1, dayOfMonth, 0, 0, 0)
+        mPresenter.onInputDate(date)
+    }
 
-    override fun addLineFilterSeat(idFilter: Int) {
-        Log.e("my test", " add line filterseat id = " + idFilter)
-        var seatFilter: SeatFilter? = null
-        unsavedSettings?.seatFilters?.forEach { if (it.id == idFilter) seatFilter = it }
-        if (seatFilter == null) {
-            seatFilter = SeatFilter(idFilter, null, 0)
-        }
+    override fun addLineFilterSeat(seatFilter: SeatFilter) {
         val parent: ViewGroup = view.sets_of_filters
         val inflater = LayoutInflater.from(activity)
         val layout = inflater.inflate(R.layout.item_filter_place, null, false) as LinearLayout
-        layout.id = idFilter
+        var idSeatFilter =  seatFilter.id?:0
+        layout.id = idSeatFilter
         var spinner: Spinner = layout.type_of_seat
         val adapter = ArrayAdapter.createFromResource(activity, R.array.type_seat, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
-        if ((seatFilter as SeatFilter).code != null) {
-            val range = 0..adapter.count
+        if (seatFilter.code != null) {
+            val range = 0..adapter.count - 1
             var setItem = 0
             for (i in range) {
                 if (adapter.getItem(i).equals(seatFilter?.code)) {
@@ -109,11 +153,8 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         }
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                unsavedSettings?.seatFilters
-                        ?.filter { it.id == idFilter }
-                        ?.map {
-                            it.code = parent.getItemAtPosition(position).toString()
-                        }
+                mPresenter.changeFilterCode(idSeatFilter, parent.getItemAtPosition(position).toString())
+
             }// to close the onItemSelected
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -124,12 +165,12 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
              ?.filter { it.id == idFilter }
              ?.map { it.code = spinner.selectedItem.toString() } }*/
         layout.btn_del_line.setOnClickListener {
-            mPresenter.removeFilterLine(idFilter)
+            mPresenter.removeFilterLine(idSeatFilter)
 
         }
         layout.filter_number.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                mPresenter.changeAmountFilter(idFilter, s.toString().toIntOrNull())
+                mPresenter.changeAmountFilter(layout.id, s.toString().toIntOrNull())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -164,71 +205,31 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         return result
     }
 
-    override fun setInitialSettings(settings: SettingsStorage.Settings) {
-        unsavedSettings = settings
-    }
 
-    private fun showDataPicker(initialDate: LocalDateTime) {
-        DatePickerDialog(activity, this, initialDate.year, initialDate.monthOfYear - 1, initialDate.dayOfMonth).show()
-    }
-
-    override fun setInitialStationFrom(station: Station) {
-        // unsavedSettings?.stationFrom = station
-        var container = view.container_station_from as TextInputLayout
-        // container.set
-        setAutoCompleteStation(view.station_from, view.progress_bar_from, station, SettingsPresenter.TAG_STATION_FROM)
-
-    }
-
-    override fun setInitialStationTo(station: Station) {
-        // unsavedSettings?.stationTo = station
-        setAutoCompleteStation(view.station_to, view.progress_bar_to, station, SettingsPresenter.TAG_STATION_TO)
-    }
-
-    private fun setAutoCompleteStation(textView: DelayAutoCompleteTextView, progressBar: ProgressBar, default: Station?, tag: String) {
-        with(textView) {
-            setText(default?.name)
-            addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {
-                    mPresenter.afterTextChanged(tag, s.toString())
+    private fun handlingInputStation(textView: DelayAutoCompleteTextView, tag: String) {
+        var textField = textView.text.toString()
+        when (tag) {
+            SettingsPresenter.TAG_STATION_FROM -> {
+                if (!textField.equals(unsavedSettings?.stationFrom?.name)) {
+                    unsavedSettings?.stationFrom?.name = textField
+                    unsavedSettings?.stationFrom?.id = ""
                 }
-
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                    // Do something before Text Change
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    // Do something while Text Change
-                }
-            })
-            threshold = 2
-            var initial: ArrayList<Station> = ArrayList()
-            if (default != null) {
-                initial.add(default)
+                Log.e("my test", " init id balnk")
             }
-            var adapter = StationAutoCompleteAdapter(context, mPresenter, initial)
-            setAdapter(adapter)
-            setLoadingIndicator(progressBar)
-            onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
-                val station = adapterView.getItemAtPosition(position) as Station
-                mPresenter.onInputStation(tag, station)
+            SettingsPresenter.TAG_STATION_TO -> {
+                if (!textField.equals(unsavedSettings?.stationTo?.name)) {
+                    unsavedSettings?.stationTo?.name = textField
+                    unsavedSettings?.stationTo?.id = ""
+                }
             }
-        }
-    }
 
-    private fun handlingInputStation(textView: DelayAutoCompleteTextView): Station {
-        val adapter = textView?.adapter
-        var station = if (adapter != null && adapter.count > 0) adapter.getItem(0) as Station else null
-        if (textView.text.toString() != station?.name) {
-            station?.name = textView.text.toString()
-            station?.id = ""
         }
-        return station ?: Station("", "")
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  retainInstance = true
+        //  retainInstance = true
 
 
     }
@@ -237,34 +238,48 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         val view = inflater.inflate(R.layout.settings_fragment, container, false)
         view.btn_add_line.setOnClickListener { mPresenter.addFilterLine() }
         view.search.setOnClickListener {
-            val stationFrom = handlingInputStation(station_from)
-            val stationTo = handlingInputStation(station_to)
-            val periodicCheck: CheckBox = check_periodically
-            var period = getPeriod(period.selectedItem as String)
-            //var filter = (filter_number.text.toString()).toIntOrNull()
-            var inputData: SettingsStorage.Settings = SettingsStorage.Settings(stationFrom, stationTo,
-                    unsavedSettings?.dateRoute ?: LocalDateTime.now(), periodicCheck.isChecked, period, getFilters())
-            mPresenter.handleInputData(inputData)
+            mPresenter.afterTextChanged(SettingsPresenter.TAG_STATION_FROM,station_from.text.toString())
+            mPresenter.afterTextChanged(SettingsPresenter.TAG_STATION_TO, station_to.text.toString())
+            mPresenter.handleInputData()
 
         }
         return view
     }
 
     override fun setInitialPeriodicCheck() {
+        var initialCheck:Boolean = unsavedSettings?.needPeriodicCheck?:false
         view.check_periodically.setOnCheckedChangeListener { _, isChecked ->
             mPresenter.onChangeCheckPeridicaly(isChecked)
         }
-        view.check_periodically.isChecked = unsavedSettings?.needPeriodicCheck ?: false
+        view.check_periodically.isChecked = initialCheck
 
     }
 
     override fun setInitialPeriod() {
-        var needShowPeriod: Boolean = unsavedSettings?.needPeriodicCheck ?: false
+        var needShowPeriod:Boolean = unsavedSettings?.needPeriodicCheck?:false
+        var currentPeriod:Long = unsavedSettings?.period?:0
         var visibility: Int = if (needShowPeriod) View.VISIBLE else View.INVISIBLE
-        setSpinnerPeriod(view.period, unsavedSettings?.period ?: 0)
+        setSpinnerPeriod(view.period, currentPeriod)
         view.period.visibility = visibility
     }
+    private fun setSpinnerPeriod(spinner: Spinner, period: Long) {
+        val periodName = getStringPeriod(period)
+        val periods = arrayOf(getString(R.string.period_half_hour), getString(R.string.period_one_hour),
+                getString(R.string.period_two_hour), getString(R.string.period_three_hour),
+                getString(R.string.period_one_week))
+        val index: Int = periods.indexOf(periodName)
+        val adapter = ArrayAdapter(this.activity, android.R.layout.simple_spinner_item, periods)
+        spinner.adapter = adapter
+        spinner.setSelection(index)
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                mPresenter.onChangePeriod(getPeriod(spinner.selectedItem as String))
+            }
 
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+    }
 
     private fun getPeriod(s: String): Long {
         var milliseconds: Long
@@ -293,37 +308,15 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         }
     }
 
-    private fun setSpinnerPeriod(spinner: Spinner, period: Long) {
-        val periodName = getStringPeriod(period)
-        val periods = arrayOf(getString(R.string.period_half_hour), getString(R.string.period_one_hour),
-                getString(R.string.period_two_hour), getString(R.string.period_three_hour),
-                getString(R.string.period_one_week))
-        val index: Int = periods.indexOf(periodName)
-        val adapter = ArrayAdapter(this.activity, android.R.layout.simple_spinner_item, periods)
-        spinner.adapter = adapter
-        spinner.setSelection(index)
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                mPresenter.onChangePeriod(getPeriod(spinner.selectedItem as String))
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
-        }
-    }
 
     fun formatNumber(number: Int): String {
         return if (number < 10) "0 $number" else number.toString()
     }
 
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val date = LocalDateTime(year, month + 1, dayOfMonth, 0, 0, 0)
-        mPresenter.onInputDate(date)
-    }
 
-    private fun formatDataText(initialDate: LocalDateTime): String {
-        return "${formatNumber(initialDate.dayOfMonth)} / ${formatNumber(initialDate.monthOfYear)} / ${initialDate.year}"
-    }
+
+
 }
 

@@ -6,7 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import proj.kolot.uzsearch.data.Station
 import proj.kolot.uzsearch.moxy.AddToEndAndRemoveById
 
 
@@ -16,15 +15,14 @@ interface SettingsView : MvpView {
     fun showErrorInputData(list: List<Integer>)
     fun hideErrorInputData(tag:String)
     fun setInitialDate()
-    fun setInitialStationFrom(station:Station)
-    fun setInitialStationTo(station:Station)
+    fun setInitialStationFrom()
+    fun setInitialStationTo()
     fun setInitialPeriodicCheck()
     fun setInitialPeriod()
-    fun setInitialSettings(settings: SettingsStorage.Settings)
-
+    fun setInitialSettings(settings:SettingsStorage.Settings?)
 
     @StateStrategyType(value = AddToEndStrategy::class, tag = "filters")
-    fun addLineFilterSeat(id: Int)
+    fun addLineFilterSeat(seatFilter:SeatFilter)
 
     @StateStrategyType(value = AddToEndAndRemoveById::class, tag = "filters")
     fun removeLineFilterSeat(id: Int)
