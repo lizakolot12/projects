@@ -4,28 +4,47 @@ package proj.kolot.uzsearch
 import org.joda.time.LocalDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 import proj.kolot.uzsearch.data.SeatType
 import proj.kolot.uzsearch.data.Station
 import proj.kolot.uzsearch.data.TransportRoute
 import proj.kolot.uzsearch.utils.filterRoutes
-import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Created by Kolot Liza on 3/15/18.
  */
-class UtilsTest {
-    var date: LocalDateTime = LocalDateTime.now()
+@RunWith(Parameterized::class)
+class UtilsTest(private var expectedList: List<TransportRoute>, private var filter: Map<String, Int>) {
+
 
     @Test
-    fun testFilterRoute() {
-        getResult().forEach { t, u ->
-            var filtersRoutes = filterRoutes(getSourceList(), t)
-            assertEquals(u, filtersRoutes)
-        }
+    fun testFilter() {
+        var filtersRoutes = filterRoutes(getSourceList(), filter)
+        assertEquals(expectedList, filtersRoutes)
     }
 
-    fun getResult(): Map<Map<String, Int>, List<TransportRoute>> {
+    companion object {
+        val date: LocalDateTime = LocalDateTime.now()
+        @JvmStatic
+        @Parameterized.Parameters
+        fun isEmptyData(): Collection<Array<Any>> {
+            var result: MutableList<Array<Any>> = ArrayList()
+            getResult().forEach { t, u -> result.add(arrayOf(u, t)) }
+            return result
+        }
+
+
+        /*@Test
+        fun testFilterRoute() {
+            getResult().forEach { t, u ->
+                var filtersRoutes = filterRoutes(getSourceList(), t)
+                assertEquals(u, filtersRoutes)
+            }
+        }*/
+
+        private fun getResult(): Map<Map<String, Int>, List<TransportRoute>> {
+
         var result: MutableMap<Map<String, Int>, List<TransportRoute>> = HashMap<Map<String, Int>, List<TransportRoute>>()
         val sourceBase: List<TransportRoute> = getSourceList()
 
@@ -58,6 +77,7 @@ class UtilsTest {
     }
 
     private fun getSourceList(): List<TransportRoute> {
+
         val source: ArrayList<TransportRoute> = ArrayList<TransportRoute>()
 
         var seats1 = HashMap<SeatType, Int>()
@@ -128,5 +148,6 @@ class UtilsTest {
                 null, seats6))
         return source
 
+    }
     }
 }
