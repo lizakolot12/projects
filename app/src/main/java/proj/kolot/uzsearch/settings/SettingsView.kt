@@ -22,7 +22,7 @@ interface SettingsView : MvpView {
     fun setInitialSettings(settings:SettingsStorage.Settings?)
 
     @StateStrategyType(value = AddToEndStrategy::class, tag = "filters")
-    fun addLineFilterSeat(seatFilter:SeatFilter)
+    fun addLineFilterSeat(id: Int, seatFilter:SeatFilter)
 
     @StateStrategyType(value = AddToEndAndRemoveById::class, tag = "filters")
     fun removeLineFilterSeat(id: Int)

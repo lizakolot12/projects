@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.train_item_layout.view.*
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.SeatType
 import proj.kolot.uzsearch.data.TransportRoute
-import proj.kolot.uzsearch.settings.SettingsStorage
 
 
 class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
+    companion object {
+        val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd E HH:mm")
+    }
 
     private var mList: List<TransportRoute> = ArrayList()
 
@@ -33,8 +37,8 @@ class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         var train: TransportRoute = mList[i]
         var places: String = viewHolder.itemView.context.getString(R.string.places)
-        var dateDeparture: String = SettingsStorage.LOCALE_NEUTRAL_DATE_TIME_FORMATTER.print(train.departureDate)
-        var dateArrival: String = SettingsStorage.LOCALE_NEUTRAL_DATE_TIME_FORMATTER.print(train.arrivalDate)
+        var dateDeparture: String = LOCALE_DATE_TIME_FORMATTER.print(train.departureDate)
+        var dateArrival: String = LOCALE_DATE_TIME_FORMATTER.print(train.arrivalDate)
         var seats: String = ""
         for (map: Map.Entry<SeatType, Int> in train.freeSeatsCountByType ?: emptyMap()) {
             seats += map.key.id + "=" + map.value + "     "

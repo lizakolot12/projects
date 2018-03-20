@@ -116,14 +116,14 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
     private fun setInitialFilterNumSeat() {
         var list: MutableList<SeatFilter>? = getInitialFilterSeats()
         list?.forEach {
-            viewState.addLineFilterSeat(it)
+            viewState.addLineFilterSeat(it.id?:getIdSeatFilter(), it)
         }
     }
 
     fun addFilterLine() {
         var newSeatFilter = SeatFilter(getIdSeatFilter(), "", 0)
         unsavedSettings?.seatFilters?.add(newSeatFilter)
-        viewState.addLineFilterSeat(newSeatFilter)
+        viewState.addLineFilterSeat(newSeatFilter.id?:getIdSeatFilter(), newSeatFilter)
     }
 
     private fun getIdSeatFilter(): Int {

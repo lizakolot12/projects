@@ -129,11 +129,12 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         mPresenter.onInputDate(date)
     }
 
-    override fun addLineFilterSeat(seatFilter: SeatFilter) {
+    override fun addLineFilterSeat(id: Int, seatFilter: SeatFilter) {
         val parent: ViewGroup = view.sets_of_filters
         val inflater = LayoutInflater.from(activity)
-        val layout = inflater.inflate(R.layout.item_filter_place, null, false) as LinearLayout
-        var idSeatFilter =  seatFilter.id?:0
+        val layout = inflater.inflate(R.layout.item_filter_place, null, false) as RelativeLayout
+
+        var idSeatFilter =  id
         layout.id = idSeatFilter
         var spinner: Spinner = layout.type_of_seat
         val adapter = ArrayAdapter.createFromResource(activity, R.array.type_seat, android.R.layout.simple_spinner_item)

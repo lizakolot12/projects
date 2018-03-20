@@ -19,10 +19,11 @@ class AddToEndAndRemoveById : StateStrategy {
         while (iterator.hasNext()) {
             val entry = iterator.next()
             if (entry.tag == incomingCommand.tag) {
-                var idRemCom = incomingCommand.javaClass.getField("p0").get(incomingCommand)
-                var idAddCom = entry.javaClass.getField("p0").get(entry)
+                var idRemCom = incomingCommand.javaClass.getField("id").get(incomingCommand)//incomingCommand.javaClass.getField("p0").get(incomingCommand)
+                var idAddCom = entry.javaClass.getField("id").get(entry)
                 if (idAddCom == idRemCom) {
                     iterator.remove()
+                    Log.e("my test", " remove command add ")
                 }
             }
         }

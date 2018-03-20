@@ -8,7 +8,7 @@
 
     <string name="from">От</string>
     <string name="to">До</string>
-    <string name="place_number">Сообщать при минимальном наличии мест</string>
+    <string name="place_number">Наличие мест</string>
     <string name="periodic">Проверять периодически</string>
     <string name="search">Искать</string>
     <string name="Date">Дата</string>
