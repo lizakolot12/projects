@@ -5,24 +5,20 @@ import android.app.IntentService
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.*
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.net.ConnectivityManager
 import android.os.SystemClock
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import org.joda.time.LocalDateTime
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.R
-import proj.kolot.uzsearch.main.TrainsRouteSearcher
 import proj.kolot.uzsearch.data.Response
 import proj.kolot.uzsearch.data.SeatType
-import proj.kolot.uzsearch.data.Station
 import proj.kolot.uzsearch.data.TransportRoute
 import proj.kolot.uzsearch.list.ContentActivity
-import proj.kolot.uzsearch.settings.SettingsStorage
-import javax.inject.Inject
-import org.slf4j.LoggerFactory
+import proj.kolot.uzsearch.main.TrainsProvider
 import java.util.Collections.emptyMap
+import javax.inject.Inject
 
 
 class SearchService : IntentService("SearchService") {
@@ -30,11 +26,9 @@ class SearchService : IntentService("SearchService") {
     //private val LOG = LoggerFactory.getLogger("SearchService")
 
     @Inject
-    lateinit var settingsStorage: SettingsStorage
-    @Inject
-    lateinit var mRouteService: TrainsRouteSearcher
+    lateinit var trainsProvider: TrainsProvider
 
- init {
+    init {
         MainApplication.graph.inject(this)
     }
 
@@ -49,15 +43,9 @@ class SearchService : IntentService("SearchService") {
     }
 
     private fun searchTrains() {
-      //  LOG.debug("search train in service");
-        var settings = settingsStorage.loadSettings()
-        if (settings.dateRoute != null) {
-            var result: Response = mRouteService.getTrains(settings.stationFrom?:Station("",""),
-                    settings.stationTo?:Station("",""), settings.dateRoute as LocalDateTime)
-            if (needNotification(result)) {
-              //  LOG.debug("search train in service and need notification " + result.list?.size);
-                showFoundTrains(result.list as List<TransportRoute>)
-            }
+        var result: Response = trainsProvider.getTrains()
+        if (needNotification(result)) {
+            showFoundTrains(result.list as List<TransportRoute>)
         }
 
     }

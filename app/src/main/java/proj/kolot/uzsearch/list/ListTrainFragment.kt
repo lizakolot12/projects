@@ -43,6 +43,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
                 when (err) {
                     Error.DATE_EXPIRED -> R.string.message_expired_date
                     Error.NOT_SAVED_DATA -> R.string.message_no_data_for_search
+                    Error.EMPTY_LIST -> R.string.message_empty_list
                     else -> R.string.message_no_data_for_search
                 }
         return getString(msg)

@@ -3,6 +3,7 @@
     <string name="search_train">Найти поезд</string>
     <string name="settings_data_title">Данные для поиска</string>
     <string name="message_expired_date">Дата для поиска уже прошла</string>
+    <string name="message_empty_list">Поезда не найдены. Попробуйте изменить параметры поиска</string>
     <string name="message_no_data_for_search">Для поиска поездов возпользуйтесь главной кнопкой</string>
     <string name="message_searching_now">Идет поиск поездов по Вашему запросу</string>
 

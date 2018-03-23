@@ -1,27 +1,10 @@
 package proj.kolot.uzsearch
 
-import android.Manifest
 import android.app.Application
 import android.content.Context
-import android.os.Environment
 import android.support.multidex.MultiDex
-import android.util.Log
 import org.slf4j.LoggerFactory
-import pl.brightinventions.slf4android.LoggerConfiguration
-import proj.kolot.uzsearch.di.AppComponent
-import proj.kolot.uzsearch.di.ContextModule
-import proj.kolot.uzsearch.di.DaggerAppComponent
-import proj.kolot.uzsearch.di.SettingsStorageModule
-import proj.kolot.uzsearch.di.TrainsRouteServiceModule
-import pl.brightinventions.slf4android.FileLogHandlerConfiguration
-import android.os.Environment.getExternalStorageDirectory
-import java.io.File
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.app.ActivityCompat.requestPermissions
+import proj.kolot.uzsearch.di.*
 
 
 //import android.support.multidex.MultiDex
@@ -51,7 +34,7 @@ class MainApplication : Application() {
         instance = this
         graph = DaggerAppComponent.builder()
                 .contextModule(ContextModule(this))
-                .trainsRouteServiceModule(TrainsRouteServiceModule())
+                .trainsModule(TrainsModule())
                 .settingsStorageModule(SettingsStorageModule())
                 .build()
         //first = DaggerAppComponent.builder().contextModule(ContextModule(this)).build()

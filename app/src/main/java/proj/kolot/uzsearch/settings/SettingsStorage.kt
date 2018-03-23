@@ -25,6 +25,7 @@ class SettingsStorage {
 
     companion object {
         val LOCALE_NEUTRAL_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss")
+        var count:Int = 0
     }
 
     private var context: Context = MainApplication.instance.baseContext
@@ -32,6 +33,7 @@ class SettingsStorage {
 
     constructor() {
         prefs = context.getSharedPreferences(PREFS_FILENAME, 0)
+        Log.e("my test", " create settings storage " + count++)
     }
 
 
@@ -107,9 +109,7 @@ class SettingsStorage {
         return Settings(stationFrom, stationTo, dateNew, needPeriodicCheck, period, filter
         )
     }
-    fun getFilters():List<SeatFilter>{
-       return getFiltersFromSavedString(prefs.getString(PREF_FILTER_NUMBER_OF_SEAT, ""))
-    }
+
 
     data class Settings(
             var stationFrom: Station?,

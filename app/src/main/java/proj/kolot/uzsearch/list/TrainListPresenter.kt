@@ -7,21 +7,16 @@ import com.arellomobile.mvp.MvpPresenter
 import org.joda.time.LocalDateTime
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.data.Response
-import proj.kolot.uzsearch.data.Station
 import proj.kolot.uzsearch.data.TransportRoute
-import proj.kolot.uzsearch.main.TrainsRouteSearcher
-import proj.kolot.uzsearch.settings.SeatFilter
+import proj.kolot.uzsearch.main.TrainsProvider
 import proj.kolot.uzsearch.settings.SettingsStorage
-import proj.kolot.uzsearch.utils.filterRoutes
 import javax.inject.Inject
 
 //https://habrahabr.ru/post/275255/
 @InjectViewState
 class TrainListPresenter : MvpPresenter<ListTrainView>() {
-
     @Inject
-    lateinit var trainsSearcher: TrainsRouteSearcher
-
+    lateinit var trainsProvider: TrainsProvider
     @Inject
     lateinit var settingsStorage: SettingsStorage
 
@@ -61,7 +56,7 @@ class TrainListPresenter : MvpPresenter<ListTrainView>() {
 
 
     inner class AsyncTaskExample : AsyncTask<Void, Void, Response>() {
-        lateinit private var settings:SettingsStorage.Settings
+
         override fun onPreExecute() {
             super.onPreExecute()
             Log.e("my test", " on pre execute must begin to show progress")
@@ -70,48 +65,28 @@ class TrainListPresenter : MvpPresenter<ListTrainView>() {
 
         override fun doInBackground(vararg params: Void?): Response {
             Log.e("my test", " do in background load trains !")
-            settings = settingsStorage.loadSettings()
-            var result = trainsSearcher.getTrains(settings.stationFrom ?: Station("", ""),
-                    settings.stationTo ?: Station("", ""), settings.dateRoute ?: LocalDateTime.now())
-            return result
+            return trainsProvider.getTrains()
         }
 
-        override fun onPostExecute(result: Response?) {
+        override fun onPostExecute(result: Response) {
             viewState.hideProgress()
+            var settings = settingsStorage.loadSettings()
             viewState.showRouteName( "" + settings.stationFrom?.name + " - " + settings.stationTo?.name)
-            if (result?.list == null || result.list?.isEmpty() ?: true) {
-                viewState.showErrorMessage(result?.message ?: "")
+            if (result.list == null || result.list?.isEmpty() ?: true) {
+                if (result?.message == null || result?.message?.isBlank() ?: false) {
+                    viewState.showErrorMessage(Error.EMPTY_LIST)
+                } else {
+                    viewState.showErrorMessage(result?.message ?: "")
+                }
             } else {
                 viewState.hideErrorMessage()
-                viewState.onTrainsLoaded(processingResult(result))
+                viewState.onTrainsLoaded(result.list as List<TransportRoute>)
             }
         }
     }
 
 
-    private fun processingResult(result: Response): List<TransportRoute> {
-        val filters = settingsStorage.getFilters()
-        val mapFilters: Map<String, Int> = convertListToMap(filters)
-        val list:List<TransportRoute> ? = result.list
-        Log.e("my test", " map filters size " + mapFilters.size)
-        if (list== null) return emptyList() else return filterRoutes(list, mapFilters)
 
 
-    }
-
-    private fun convertListToMap(list: List<SeatFilter>): Map<String, Int> {
-        var map: MutableMap<String, Int> = HashMap<String, Int>()
-        list.forEach {
-            if (it.code != null) {
-                var currentAmount: Int? = map.get(it.code as String)
-                var newAmount: Int = it.amount ?: 0
-                if (currentAmount != null && currentAmount < newAmount) {
-                    newAmount = currentAmount
-                }
-                map.put(it.code as String, newAmount)
-            }
-        }
-        return map
-    }
 
 }

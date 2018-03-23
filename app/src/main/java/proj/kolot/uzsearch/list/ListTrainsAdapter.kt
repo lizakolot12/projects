@@ -11,11 +11,12 @@ import org.joda.time.format.DateTimeFormatter
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.SeatType
 import proj.kolot.uzsearch.data.TransportRoute
+import java.util.*
 
 
 class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
     companion object {
-        val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd E HH:mm")
+        val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd MMM HH:mm")
     }
 
     private var mList: List<TransportRoute> = ArrayList()
@@ -47,7 +48,10 @@ class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
         var description = train.name + "  \n" + places + ":" + seats + "   \n" +
                 dateDeparture + "  \n" + dateArrival + "  "
         viewHolder.idTrain.text = train.id
-        viewHolder.description.text = description
+        viewHolder.nameTrain.text = train.name
+        viewHolder.seats.text = seats
+        viewHolder.infoFrom.text = dateDeparture
+        viewHolder.infoTo.text = dateArrival
 
 
     }
@@ -60,12 +64,19 @@ class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
     class ViewHolder : RecyclerView.ViewHolder {
 
         var idTrain: TextView
-        var description: TextView
+        var nameTrain:TextView
+        var infoFrom: TextView
+        var infoTo: TextView
+        var seats: TextView
+
 
 
         constructor(itemView: View) : super(itemView) {
             idTrain = itemView.train_id as TextView
-            description = itemView.train_description as TextView
+            nameTrain = itemView.name_train as TextView
+            infoFrom = itemView.info_from as TextView
+            infoTo = itemView.info_to as TextView
+            seats = itemView.seats as TextView
 
         }
 
