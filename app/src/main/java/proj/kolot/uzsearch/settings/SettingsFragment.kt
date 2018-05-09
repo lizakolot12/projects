@@ -1,6 +1,7 @@
 package proj.kolot.uzsearch.settings
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,9 +23,10 @@ import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.Station
 import proj.kolot.uzsearch.list.ContentActivity
 import proj.kolot.uzsearch.utils.DelayAutoCompleteTextView
+import java.util.*
 
 
-class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSetListener {
+class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private var filtersViews = ArrayList<ViewGroup>()
     private var unsavedSettings: SettingsStorage.Settings? = null
@@ -118,6 +120,28 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         showDate.setOnClickListener { showDataPicker(inputDate) }
     }
 
+    override fun setInitialTime() {
+        var inputDate: LocalDateTime = unsavedSettings?.dateRoute ?: LocalDateTime(0, 0, 0, 0, 0, 0)
+        showTimeDialog.text = formatTimeText(inputDate)
+        showTimeDialog.setOnClickListener { showTimePicker() }
+    }
+
+    private fun formatTimeText(initialDate: LocalDateTime): String {
+        return "${formatNumber(initialDate.hourOfDay)} : ${formatNumber(initialDate.minuteOfHour)}"
+
+    }
+
+    private fun showTimePicker() {
+        val dateAndTime = Calendar.getInstance()
+        TimePickerDialog(activity, this,
+                dateAndTime.get(Calendar.HOUR_OF_DAY),
+                dateAndTime.get(Calendar.MINUTE), true)
+                .show();
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        mPresenter.onInputTime(hourOfDay, minute)
+    }
     private fun formatDataText(initialDate: LocalDateTime): String {
         return "${formatNumber(initialDate.dayOfMonth)} / ${formatNumber(initialDate.monthOfYear)} / ${initialDate.year}"
     }
@@ -125,8 +149,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         DatePickerDialog(activity, this, initialDate.year, initialDate.monthOfYear - 1, initialDate.dayOfMonth).show()
     }
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val date = LocalDateTime(year, month + 1, dayOfMonth, 0, 0, 0)
-        mPresenter.onInputDate(date)
+        mPresenter.onInputDate(year, month + 1, dayOfMonth)
     }
 
     override fun addLineFilterSeat(id: Int, seatFilter: SeatFilter) {

@@ -15,6 +15,7 @@ interface SettingsView : MvpView {
     fun showErrorInputData(list: List<Integer>)
     fun hideErrorInputData(tag:String)
     fun setInitialDate()
+    fun setInitialTime()
     fun setInitialStationFrom()
     fun setInitialStationTo()
     fun setInitialPeriodicCheck()

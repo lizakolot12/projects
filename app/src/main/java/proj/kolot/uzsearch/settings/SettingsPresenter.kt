@@ -39,9 +39,17 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
     }
 
 
-    fun onInputDate(date: LocalDateTime) {
-        unsavedSettings?.dateRoute = date
+    fun onInputDate( year: Int, month: Int, dayOfMonth: Int) {
+        var curDateRoute:LocalDateTime = unsavedSettings?.dateRoute?: LocalDateTime()
+        var newDateRoute:LocalDateTime = LocalDateTime(year, month, dayOfMonth, curDateRoute.hourOfDay, curDateRoute.minuteOfHour)
+        unsavedSettings?.dateRoute = newDateRoute
         viewState.setInitialDate()
+    }
+    fun onInputTime(  hourOfDay: Int, minute: Int) {
+        var curDateRoute:LocalDateTime = unsavedSettings?.dateRoute?: LocalDateTime()
+        var newDateRoute:LocalDateTime = LocalDateTime(curDateRoute.year, curDateRoute.monthOfYear, curDateRoute.dayOfMonth, hourOfDay, minute)
+        unsavedSettings?.dateRoute = newDateRoute
+        viewState.setInitialTime()
     }
 
     fun onInputStation(tagStation: String, station: Station) {
@@ -106,6 +114,7 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
         viewState.setInitialStationFrom()
         viewState.setInitialStationTo()
         viewState.setInitialDate()
+        viewState.setInitialTime()
         viewState.setInitialPeriodicCheck()
         viewState.setInitialPeriod()
         setInitialFilterNumSeat()

@@ -1,14 +1,19 @@
 package proj.kolot.uzsearch.main
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.SystemClock
 import proj.kolot.uzsearch.MainApplication
+import proj.kolot.uzsearch.service.SearchService
 import javax.inject.Inject
 
 
 class SearchRepeaterImpl : SearchRepeater {
 
     @Inject
-    lateinit var mContext: Context
+    lateinit var context: Context
 
     init {
         MainApplication.graph.inject(this)
@@ -16,9 +21,23 @@ class SearchRepeaterImpl : SearchRepeater {
 
 
     override fun runRepeatingTask(on: Boolean, repeatingInterval: Long) {
-        var service: proj.kolot.uzsearch.service.SearchService = proj.kolot.uzsearch.service.SearchService()
-        service.setServiceAlarm(mContext, on, repeatingInterval)
+        var intent: Intent = Intent(context, SearchService::class.java)
+        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
+        var am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (on) {
+            am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + repeatingInterval,
+                    repeatingInterval, pendingIntent)
+        } else {
+            am.cancel(pendingIntent)
+            pendingIntent.cancel()
+        }
     }
 
+
+    fun isServiceAlarmOn(context: Context): Boolean {
+        var intent: Intent = Intent(context, SearchService::class.java)
+        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        return pendingIntent != null
+    }
 
 }

@@ -1,13 +1,11 @@
 package proj.kolot.uzsearch.service
 
-import android.app.AlarmManager
 import android.app.IntentService
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.net.ConnectivityManager
-import android.os.SystemClock
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import proj.kolot.uzsearch.MainApplication
@@ -57,25 +55,8 @@ class SearchService : IntentService("SearchService") {
         return isNetworkConnected
     }
 
-    fun setServiceAlarm(context: Context, on: Boolean, intervalMillis: Long) {
-        var intent: Intent = Intent(context, SearchService::class.java)
-        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
-        var am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (on) {
-            am.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + intervalMillis,
-                    intervalMillis, pendingIntent)
-        } else {
-            am.cancel(pendingIntent)
-            pendingIntent.cancel()
-        }
 
-    }
 
-    fun isServiceAlarmOn(context: Context): Boolean {
-        var intent: Intent = Intent(context, SearchService::class.java)
-        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
-        return pendingIntent != null
-    }
 
 
     fun showFoundTrains(trains: List<TransportRoute>) {

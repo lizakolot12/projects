@@ -12,9 +12,11 @@
     <string name="place_number">Наличие мест</string>
     <string name="periodic">Проверять периодически</string>
     <string name="search">Искать</string>
-    <string name="Date">Дата</string>
+    <string name="date">Дата</string>
     <string name="input_date">Дата</string>
+    <string name="input_time">Время</string>
     <string name="all_place">Всех</string>
+    <string name="title_time_from">Отправления от</string>
 
     <string name="places">Свободные места</string>
 
