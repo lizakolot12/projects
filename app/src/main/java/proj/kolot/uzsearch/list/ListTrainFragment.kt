@@ -44,7 +44,9 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
                     Error.DATE_EXPIRED -> R.string.message_expired_date
                     Error.NOT_SAVED_DATA -> R.string.message_no_data_for_search
                     Error.EMPTY_LIST -> R.string.message_empty_list
-                    else -> R.string.message_no_data_for_search
+                    else -> {
+                        R.string.message_no_data_for_search
+                    }
                 }
         return getString(msg)
     }
@@ -106,7 +108,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_list_train)
         Log.e("my test", " on createview in listtrainfragment")
-        //mPresenter.loadTrains()
+        //presenter.loadTrains()
         return view
     }
 

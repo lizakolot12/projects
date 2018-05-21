@@ -17,6 +17,8 @@
     <string name="input_time">Время</string>
     <string name="all_place">Всех</string>
     <string name="title_time_from">Отправления от</string>
+    <string name="title_train_number">Номер поезда</string>
+    <string name="title_adding_panel">Больше параметров</string>
 
     <string name="places">Свободные места</string>
 

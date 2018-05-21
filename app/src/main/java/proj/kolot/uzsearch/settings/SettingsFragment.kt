@@ -32,7 +32,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     private var unsavedSettings: SettingsStorage.Settings? = null
 
     @InjectPresenter(type = PresenterType.LOCAL, tag = "SettingsPresenter")
-    lateinit var mPresenter: SettingsPresenter
+    lateinit var presenter: SettingsPresenter
 
 
     override fun showResult() {
@@ -87,7 +87,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     }
     /*addTextChangedListener(object : TextWatcher {
                  override fun afterTextChanged(s: Editable) {
-                     mPresenter.afterTextChanged(tag, s.toString(), getTag().toString())
+                     presenter.afterTextChanged(tag, s.toString(), getTag().toString())
                  }
 
                  override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -104,12 +104,12 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
             if (station != null) {
                 initial.add(station)
             }
-            var adapter = StationAutoCompleteAdapter(context, mPresenter, initial)
+            var adapter = StationAutoCompleteAdapter(context, presenter, initial)
             setAdapter(adapter)
             setLoadingIndicator(progressBar)
             onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
                 val station = adapterView.getItemAtPosition(position) as Station
-                mPresenter.onInputStation(tag, station)
+                presenter.onInputStation(tag, station)
             }
         }
     }
@@ -121,7 +121,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     }
 
     override fun setInitialTime() {
-        var inputDate: LocalDateTime = unsavedSettings?.dateRoute ?: LocalDateTime(0, 0, 0, 0, 0, 0)
+        var inputDate: LocalDateTime = unsavedSettings?.dateRoute ?: LocalDateTime.now()
         showTimeDialog.text = formatTimeText(inputDate)
         showTimeDialog.setOnClickListener { showTimePicker() }
     }
@@ -140,7 +140,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        mPresenter.onInputTime(hourOfDay, minute)
+        presenter.onInputTime(hourOfDay, minute)
     }
     private fun formatDataText(initialDate: LocalDateTime): String {
         return "${formatNumber(initialDate.dayOfMonth)} / ${formatNumber(initialDate.monthOfYear)} / ${initialDate.year}"
@@ -149,7 +149,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         DatePickerDialog(activity, this, initialDate.year, initialDate.monthOfYear - 1, initialDate.dayOfMonth).show()
     }
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mPresenter.onInputDate(year, month + 1, dayOfMonth)
+        presenter.onInputDate(year, month + 1, dayOfMonth)
     }
 
     override fun addLineFilterSeat(id: Int, seatFilter: SeatFilter) {
@@ -177,7 +177,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         }
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                mPresenter.changeFilterCode(idSeatFilter, parent.getItemAtPosition(position).toString())
+                presenter.changeFilterCode(idSeatFilter, parent.getItemAtPosition(position).toString())
 
             }// to close the onItemSelected
 
@@ -189,12 +189,12 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
              ?.filter { it.id == idFilter }
              ?.map { it.code = spinner.selectedItem.toString() } }*/
         layout.btn_del_line.setOnClickListener {
-            mPresenter.removeFilterLine(idSeatFilter)
+            presenter.removeFilterLine(idSeatFilter)
 
         }
         layout.filter_number.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                mPresenter.changeAmountFilter(layout.id, s.toString().toIntOrNull())
+                presenter.changeAmountFilter(layout.id, s.toString().toIntOrNull())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -260,20 +260,37 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.settings_fragment, container, false)
-        view.btn_add_line.setOnClickListener { mPresenter.addFilterLine() }
+        view.btn_add_line.setOnClickListener { presenter.addFilterLine() }
         view.search.setOnClickListener {
-            mPresenter.afterTextChanged(SettingsPresenter.TAG_STATION_FROM,station_from.text.toString())
-            mPresenter.afterTextChanged(SettingsPresenter.TAG_STATION_TO, station_to.text.toString())
-            mPresenter.handleInputData()
+            with (presenter){
+                afterTextChanged(SettingsPresenter.TAG_STATION_FROM, station_from.text.toString())
+                afterTextChanged(SettingsPresenter.TAG_STATION_TO, station_to.text.toString())
+                handleInputData()
+            }
+
 
         }
+
+        view.train_number_value.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                presenter.changeTrainNumberValue(s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // Do something before Text Change
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // Do something while Text Change
+            }
+        })
         return view
     }
 
     override fun setInitialPeriodicCheck() {
         var initialCheck:Boolean = unsavedSettings?.needPeriodicCheck?:false
         view.check_periodically.setOnCheckedChangeListener { _, isChecked ->
-            mPresenter.onChangeCheckPeridicaly(isChecked)
+            presenter.onChangeCheckPeridicaly(isChecked)
         }
         view.check_periodically.isChecked = initialCheck
 
@@ -297,7 +314,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         spinner.setSelection(index)
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                mPresenter.onChangePeriod(getPeriod(spinner.selectedItem as String))
+                presenter.onChangePeriod(getPeriod(spinner.selectedItem as String))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -337,6 +354,7 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     fun formatNumber(number: Int): String {
         return if (number < 10) "0 $number" else number.toString()
     }
+
 
 
 

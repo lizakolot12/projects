@@ -200,4 +200,9 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
     }
 
 
+
+
+    fun changeTrainNumberValue(toString: String) {
+        unsavedSettings?.numberTrain = toString
+    }
 }

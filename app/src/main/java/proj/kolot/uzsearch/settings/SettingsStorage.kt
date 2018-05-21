@@ -20,6 +20,7 @@ class SettingsStorage {
     val PREF_NEED_PERIODICALLY = "need_periodically"
     val PREF_TIME_PERIODICALLY = "time_periodically"
     val PREF_FILTER_NUMBER_OF_SEAT = "filter_number_of_seat"
+    val PREF_FILTER_NUMBER_OF_TRAIN = "filter_number_of_train"
     val dividerItem: String = "//"
     val dividerWords: String = ":"
 
@@ -56,6 +57,7 @@ class SettingsStorage {
         editor.putBoolean(PREF_NEED_PERIODICALLY, settings.needPeriodicCheck)
         editor.putLong(PREF_TIME_PERIODICALLY, settings.period ?: 0)
         editor.putString(PREF_FILTER_NUMBER_OF_SEAT, getStringFiltersForSave(settings.seatFilters))
+        editor.putString(PREF_FILTER_NUMBER_OF_TRAIN, settings.numberTrain)
         editor.apply()
     }
 
@@ -105,8 +107,8 @@ class SettingsStorage {
         val needPeriodicCheck = prefs.getBoolean(PREF_NEED_PERIODICALLY, false)
         val period = prefs.getLong(PREF_TIME_PERIODICALLY, 0)
         val filter = getFiltersFromSavedString(prefs.getString(PREF_FILTER_NUMBER_OF_SEAT, ""))
-
-        return Settings(stationFrom, stationTo, dateNew, needPeriodicCheck, period, filter
+        val filterNumberTrain = prefs.getString(PREF_FILTER_NUMBER_OF_TRAIN, null)
+        return Settings(stationFrom, stationTo, filterNumberTrain, dateNew, needPeriodicCheck, period, filter
         )
     }
 
@@ -114,6 +116,7 @@ class SettingsStorage {
     data class Settings(
             var stationFrom: Station?,
             var stationTo: Station?,
+            var numberTrain: String? = null,
             var dateRoute: LocalDateTime?,
             var needPeriodicCheck: Boolean,
             var period: Long?,

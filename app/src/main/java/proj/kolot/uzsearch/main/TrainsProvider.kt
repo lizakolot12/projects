@@ -43,7 +43,13 @@ class TrainsProvider {
         val mapFilters: Map<String, Int> = convertListToMap(filters)
         val list: List<TransportRoute>? = result.list
         Log.e("my test", " map filters size " + mapFilters.size)
-        if (list == null) return emptyList() else return filterRoutes(list, mapFilters)
+        var filteredList = if (list == null) emptyList() else filterRoutes(list, mapFilters)
+        val filterNumberTrain = settings?.numberTrain
+        if (!filterNumberTrain.isNullOrEmpty()) {
+            filteredList = filteredList.filter { it.id == filterNumberTrain }
+        }
+        return filteredList
+
     }
 
     private fun convertListToMap(list: MutableList<SeatFilter>?): Map<String, Int> {

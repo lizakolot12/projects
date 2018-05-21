@@ -36,7 +36,7 @@ class SearchRepeaterImpl : SearchRepeater {
 
     fun isServiceAlarmOn(context: Context): Boolean {
         var intent: Intent = Intent(context, SearchService::class.java)
-        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        var pendingIntent: PendingIntent? = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
         return pendingIntent != null
     }
 

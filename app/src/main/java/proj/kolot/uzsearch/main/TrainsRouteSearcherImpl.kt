@@ -25,7 +25,7 @@ class TrainsRouteSearcherImpl : TrainsRouteSearcher {
         try {
             var list: ArrayList<proj.kolot.uzsearch.data.TransportRoute> = ArrayList()
 
-            var result = routeSearchService.findRoutes(stationFrom, stationTo, departureDate);
+            var result = routeSearchService.findRoutes(stationFrom, stationTo, departureDate)
             result.forEach({
                 list.add(proj.kolot.uzsearch.data.TransportRoute(it.id, it.name, transformStation(it.from),
                         transformStation(it.till), it.departureDate, it.arrivalDate, it.travelTime, transformSeatType(it.freeSeatsCountByType)))
