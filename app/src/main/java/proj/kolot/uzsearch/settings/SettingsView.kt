@@ -20,6 +20,7 @@ interface SettingsView : MvpView {
     fun setInitialStationTo()
     fun setInitialPeriodicCheck()
     fun setInitialPeriod()
+    fun setInitialFilterTrainsNumber()
     fun setInitialSettings(settings:SettingsStorage.Settings?)
 
 
@@ -30,7 +31,10 @@ interface SettingsView : MvpView {
     fun removeLineFilterSeat(id: Int)
 
     @StateStrategyType(value = OneExecutionStateStrategy::class)
-    fun showResult()
+    fun showResult(id:Int)
 
+
+    @StateStrategyType(value = OneExecutionStateStrategy::class)
+    fun showAllTask()
 
 }

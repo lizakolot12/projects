@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list
+package proj.kolot.uzsearch.route
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

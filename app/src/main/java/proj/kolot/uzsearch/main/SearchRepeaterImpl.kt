@@ -20,8 +20,8 @@ class SearchRepeaterImpl : SearchRepeater {
     }
 
 
-    override fun runRepeatingTask(on: Boolean, repeatingInterval: Long) {
-        var intent: Intent = Intent(context, SearchService::class.java)
+    override fun runRepeatingTask(id: Int, on: Boolean, repeatingInterval: Long) {
+        var intent: Intent = SearchService.newIntent(context, id)
         var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
         var am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (on) {

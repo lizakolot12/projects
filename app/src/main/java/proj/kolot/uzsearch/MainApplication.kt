@@ -3,8 +3,10 @@ package proj.kolot.uzsearch
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
+import kotlinx.android.synthetic.main.settings_fragment.*
 import org.slf4j.LoggerFactory
 import proj.kolot.uzsearch.di.*
+import proj.kolot.uzsearch.list.db.HelperFactory
 
 
 //import android.support.multidex.MultiDex
@@ -12,6 +14,7 @@ import proj.kolot.uzsearch.di.*
 
 class MainApplication : Application() {
     private val LOG = LoggerFactory.getLogger("MainApplication")
+
 
     companion object {
         lateinit var graph: AppComponent
@@ -28,14 +31,22 @@ class MainApplication : Application() {
     }
 
 
+    override fun onTerminate() {
+        HelperFactory.releaseHelper();
+        super.onTerminate()
+
+    }
+
     override fun onCreate() {
         super.onCreate()
+        HelperFactory.setHelper(getApplicationContext());
        // logging()
         instance = this
         graph = DaggerAppComponent.builder()
                 .contextModule(ContextModule(this))
                 .trainsModule(TrainsModule())
                 .settingsStorageModule(SettingsStorageModule())
+                .repeaterModule(RepeaterModule())
                 .build()
         //first = DaggerAppComponent.builder().contextModule(ContextModule(this)).build()
 

@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list
+package proj.kolot.uzsearch.route
 
 /**
  * Created by Kolot Liza on 12/7/17.

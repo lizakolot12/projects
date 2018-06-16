@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list
+package proj.kolot.uzsearch.route
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy

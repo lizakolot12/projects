@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list
+package proj.kolot.uzsearch.route
 
 import android.os.AsyncTask
 import android.util.Log
@@ -9,6 +9,7 @@ import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.data.Response
 import proj.kolot.uzsearch.data.TransportRoute
 import proj.kolot.uzsearch.main.TrainsProvider
+import proj.kolot.uzsearch.settings.RequestStorage
 import proj.kolot.uzsearch.settings.SettingsStorage
 import javax.inject.Inject
 
@@ -17,8 +18,11 @@ import javax.inject.Inject
 class TrainListPresenter : MvpPresenter<ListTrainView>() {
     @Inject
     lateinit var trainsProvider: TrainsProvider
+
     @Inject
-    lateinit var settingsStorage: SettingsStorage
+    lateinit var requestStorage: RequestStorage
+
+    private var settings: SettingsStorage.Settings? = null
 
     init {
         MainApplication.graph.inject(this)
@@ -28,14 +32,15 @@ class TrainListPresenter : MvpPresenter<ListTrainView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         Log.e("my test", " on first view attach trains presenter " + viewState)
-        loadTrains()
+      //  loadTrains()
 
     }
 
-    fun loadTrains() {
+    fun loadTrains(id:Int) {
         Log.e("my test", " load trains presenter+ " + viewState)
         var err: Error;
-        var dateSearch: LocalDateTime? = settingsStorage.loadSettings().dateRoute
+        settings = requestStorage.getRequestById(id)
+        var dateSearch: LocalDateTime? = settings?.dateRoute
         when {
             (dateSearch == null) -> {
                 err = Error.NOT_SAVED_DATA
@@ -65,13 +70,12 @@ class TrainListPresenter : MvpPresenter<ListTrainView>() {
 
         override fun doInBackground(vararg params: Void?): Response {
             Log.e("my test", " do in background load trains !")
-            return trainsProvider.getTrains()
+            return trainsProvider.getTrains(settings as SettingsStorage.Settings)
         }
 
         override fun onPostExecute(result: Response) {
             viewState.hideProgress()
-            var settings = settingsStorage.loadSettings()
-            viewState.showRouteName( "" + settings.stationFrom?.name + " - " + settings.stationTo?.name)
+            viewState.showRouteName( "" + settings?.stationFrom?.name + " - " + settings?.stationTo?.name)
             if (result.list == null || result.list?.isEmpty() ?: true) {
                 if (result?.message == null || result?.message?.isBlank() ?: false) {
                     viewState.showErrorMessage(Error.EMPTY_LIST)

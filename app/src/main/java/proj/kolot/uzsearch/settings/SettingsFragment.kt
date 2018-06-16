@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.settings_fragment.view.*
 import org.joda.time.LocalDateTime
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.Station
-import proj.kolot.uzsearch.list.ContentActivity
+import proj.kolot.uzsearch.list.TaskListActivity
+import proj.kolot.uzsearch.route.ContentActivity
 import proj.kolot.uzsearch.utils.DelayAutoCompleteTextView
 import java.util.*
 
@@ -35,14 +36,22 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
     lateinit var presenter: SettingsPresenter
 
 
-    override fun showResult() {
-        val intent = ContentActivity.newIntent(activity)
+    override fun showResult(id:Int) {
+        val intent = ContentActivity.newIntent(activity, id)
         startActivity(intent)
         //   https://habrahabr.ru/company/redmadrobot/blog/325816/
     }
 
+    override fun showAllTask() {
+        val intent = TaskListActivity.newIntent(activity)
+        startActivity(intent)
+    }
     override fun setInitialSettings(settings: SettingsStorage.Settings?) {
         this.unsavedSettings = settings
+    }
+
+    override fun setInitialFilterTrainsNumber() {
+        view.train_number_value.setText(unsavedSettings?.numberTrain)
     }
 
     override fun showErrorInputData(list: List<Integer>) {
@@ -265,11 +274,21 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
             with (presenter){
                 afterTextChanged(SettingsPresenter.TAG_STATION_FROM, station_from.text.toString())
                 afterTextChanged(SettingsPresenter.TAG_STATION_TO, station_to.text.toString())
-                handleInputData()
+                searchTrains()
             }
-
-
         }
+
+        view.save.setOnClickListener {
+            with (presenter){
+                afterTextChanged(SettingsPresenter.TAG_STATION_FROM, station_from.text.toString())
+                afterTextChanged(SettingsPresenter.TAG_STATION_TO, station_to.text.toString())
+                saveTrainsInfo()
+            }
+        }
+
+
+
+
 
         view.train_number_value.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -286,6 +305,8 @@ class SettingsFragment : MvpFragment(), SettingsView, DatePickerDialog.OnDateSet
         })
         return view
     }
+
+
 
     override fun setInitialPeriodicCheck() {
         var initialCheck:Boolean = unsavedSettings?.needPeriodicCheck?:false

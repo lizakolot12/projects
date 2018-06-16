@@ -17,8 +17,7 @@ import javax.inject.Inject
 class TrainsProvider {
 
 
-    @Inject
-    lateinit var settingsStorage: SettingsStorage
+
     @Inject
     lateinit var trainsSearcher: TrainsRouteSearcher
 
@@ -30,8 +29,8 @@ class TrainsProvider {
 
     }
 
-    fun getTrains():Response {
-        settings = settingsStorage.loadSettings()
+    fun getTrains(set:SettingsStorage.Settings):Response {
+        settings = set
         var result:Response = trainsSearcher.getTrains(settings?.stationFrom ?: Station("", ""),
                 settings?.stationTo ?: Station("", ""), settings?.dateRoute ?: LocalDateTime.now())
         var list:List<TransportRoute> = processingResult(result)

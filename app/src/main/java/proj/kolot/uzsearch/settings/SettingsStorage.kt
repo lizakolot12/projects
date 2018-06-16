@@ -108,12 +108,13 @@ class SettingsStorage {
         val period = prefs.getLong(PREF_TIME_PERIODICALLY, 0)
         val filter = getFiltersFromSavedString(prefs.getString(PREF_FILTER_NUMBER_OF_SEAT, ""))
         val filterNumberTrain = prefs.getString(PREF_FILTER_NUMBER_OF_TRAIN, null)
-        return Settings(stationFrom, stationTo, filterNumberTrain, dateNew, needPeriodicCheck, period, filter
+        return Settings(0,stationFrom, stationTo, filterNumberTrain, dateNew, needPeriodicCheck, period, filter
         )
     }
 
 
     data class Settings(
+            var id:Int?,
             var stationFrom: Station?,
             var stationTo: Station?,
             var numberTrain: String? = null,

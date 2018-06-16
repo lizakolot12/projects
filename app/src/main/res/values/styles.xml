@@ -13,6 +13,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="ActivedHintText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/colorTextTitleActivated</item>
         <item name="android:typeface">monospace</item>
@@ -45,7 +46,7 @@
     </style>
 
 
-    <style name="CustomEditText" >
+    <style name="CustomEditText">
         <item name="colorControlNormal">@color/colorTextField</item>
         <item name="colorControlActivated">@color/colorTextField</item>
         <item name="colorControlHighlight">@color/colorTextField</item>

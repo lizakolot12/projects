@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list
+package proj.kolot.uzsearch.route
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -23,15 +23,26 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     @InjectPresenter(type = PresenterType.LOCAL, tag = "ListTrainPresenter")
 
 
-    lateinit var mPresenter: TrainListPresenter
+    lateinit var presenter: TrainListPresenter
 
+    companion object {
+        private val ARGUMENT_ID = "argument_id_route"
+
+        fun newIntent(id: Int): ListTrainFragment {
+            val fragment: ListTrainFragment = ListTrainFragment()
+            val arg: Bundle = Bundle()
+            arg.putInt(ARGUMENT_ID, id)
+            fragment.arguments = arg
+            return fragment
+        }
+    }
     override fun showErrorMessage(err: Error) {
         showErrorMessage(getMsgByCodeError(err))
     }
 
-    fun changeData() {
+    fun changeData(id:Int) {
         Log.e("my test", " change data")
-        mPresenter.loadTrains()
+        presenter.loadTrains(id)
     }
 
     override fun showRouteName(name: String) {
@@ -108,7 +119,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_list_train)
         Log.e("my test", " on createview in listtrainfragment")
-        //presenter.loadTrains()
+        presenter.loadTrains(arguments.getInt(ARGUMENT_ID))
         return view
     }
 

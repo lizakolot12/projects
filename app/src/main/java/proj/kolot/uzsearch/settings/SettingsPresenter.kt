@@ -29,6 +29,10 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
     @Inject
     lateinit var routeSearcher: TrainsRouteSearcher
 
+    @Inject
+    lateinit var requestStorage: RequestStorage
+
+
     private var idSeatFilter: Int = 0
 
     private var unsavedSettings: SettingsStorage.Settings? = null
@@ -90,16 +94,7 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
         initView()
         Log.e("my test", " on first view attach" + "restore state = " + isInRestoreState(viewState))
     }
-//    private fun getStationFrom():Station{
-//        return unsavedSettings?.stationFrom ?: Station("", "")
-//    }
-//    private fun getStationTo():Station{return unsavedSettings?.stationTo ?: Station("", "")}
-//
-//    private fun getInitialDate():LocalDateTime {return  unsavedSettings?.dateRoute ?: LocalDateTime.now()}
-//
-//    private fun getInitialPeriodicCheck():Boolean{return  unsavedSettings?.needPeriodicCheck ?: false}
-//
-//    private fun getPeriod():Long{return unsavedSettings?.period ?: 0}
+
 
     private fun getInitialFilterSeats(): MutableList<SeatFilter>? {
         var list: MutableList<SeatFilter>? = unsavedSettings?.seatFilters
@@ -117,6 +112,7 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
         viewState.setInitialTime()
         viewState.setInitialPeriodicCheck()
         viewState.setInitialPeriod()
+        viewState.setInitialFilterTrainsNumber()
         setInitialFilterNumSeat()
 
     }
@@ -136,7 +132,7 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
     }
 
     private fun getIdSeatFilter(): Int {
-        return idSeatFilter++;
+        return idSeatFilter++
     }
 
     fun changeAmountFilter(id: Int, amount: Int?) {
@@ -154,26 +150,42 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
         return routeSearcher.findStations(nameStation)
     }
 
-    fun handleInputData() {
+    private fun handleInputData(): Int {
         var errors: ArrayList<Integer> = java.util.ArrayList()
         if (unsavedSettings?.stationFrom?.name.isNullOrBlank() || unsavedSettings?.stationFrom?.id.isNullOrBlank()) errors.add(ID_ERROR_STATION_FROM)
         if (unsavedSettings?.stationTo?.name.isNullOrBlank() || unsavedSettings?.stationTo?.id.isNullOrBlank()) errors.add(ID_ERROR_STATION_TO)
         if (unsavedSettings?.dateRoute == null) errors.add(ID_ERROR_DATE)
         if (errors.size > 0) {
             viewState.showErrorInputData(errors)
-            return
+            return -1
         }
+        var result: Int = -1
         if (unsavedSettings != null) {
-            settingsStorage.saveSettings(unsavedSettings as SettingsStorage.Settings)
-        }
-        viewState.showResult()
+            result = requestStorage.createRequest(unsavedSettings as SettingsStorage.Settings)
 
-        runService()
+        }
+        return result
+
+
     }
 
-    private fun runService() {
+    fun searchTrains() {
+        val id = handleInputData()
+        if (id > 0) {
+            runService(id)
+            viewState.showResult(id)
+        }
+    }
+
+    fun saveTrainsInfo() {
+        if (handleInputData() > 0) {
+            viewState.showAllTask()
+        }
+    }
+
+    private fun runService(id:Int) {
         var repeater: SearchRepeater = SearchRepeaterImpl()
-        repeater.runRepeatingTask(settingsStorage.needPeriodically(), settingsStorage.getPeriod())
+        repeater.runRepeatingTask(id, unsavedSettings?.needPeriodicCheck?:false, unsavedSettings?.period?:0)
 
     }
 
@@ -184,7 +196,6 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
                     unsavedSettings?.stationFrom?.name = textField
                     unsavedSettings?.stationFrom?.id = ""
                 }
-                Log.e("my test", " init id balnk")
             }
             SettingsPresenter.TAG_STATION_TO -> {
                 if (!textField.equals(unsavedSettings?.stationTo?.name)) {

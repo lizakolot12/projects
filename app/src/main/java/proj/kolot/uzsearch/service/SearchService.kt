@@ -13,8 +13,10 @@ import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.Response
 import proj.kolot.uzsearch.data.SeatType
 import proj.kolot.uzsearch.data.TransportRoute
-import proj.kolot.uzsearch.list.ContentActivity
 import proj.kolot.uzsearch.main.TrainsProvider
+import proj.kolot.uzsearch.route.ContentActivity
+import proj.kolot.uzsearch.settings.RequestStorage
+import proj.kolot.uzsearch.settings.SettingsStorage
 import java.util.Collections.emptyMap
 import javax.inject.Inject
 
@@ -25,23 +27,36 @@ class SearchService : IntentService("SearchService") {
 
     @Inject
     lateinit var trainsProvider: TrainsProvider
+    @Inject
+    lateinit var requestStorage: RequestStorage
 
     init {
         MainApplication.graph.inject(this)
     }
 
+    companion object {
+        private val ARGUMENT_ID = "argument_id_route_for_service"
+
+        fun newIntent(context:Context, id: Int): Intent {
+            var intent: Intent = Intent(context, SearchService::class.java)
+            intent.putExtra(ARGUMENT_ID, id)
+            return intent
+        }
+    }
 
     override fun onHandleIntent(intent: Intent) {
         if (!isNetworkAvailableAndConnected()) {
             return
         }
-        searchTrains()
+        searchTrains(intent)
 
 
     }
 
-    private fun searchTrains() {
-        var result: Response = trainsProvider.getTrains()
+    private fun searchTrains(intent: Intent) {
+        val id: Int = intent.getIntExtra(ARGUMENT_ID, -1)
+        val  settings:SettingsStorage.Settings = requestStorage.getRequestById(id)
+        var result: Response = trainsProvider.getTrains(settings)
         if (needNotification(result)) {
             showFoundTrains(result.list as List<TransportRoute>)
         }

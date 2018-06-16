@@ -4,19 +4,50 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.main.SearchRepeater
-import proj.kolot.uzsearch.main.SearchRepeaterImpl
-import proj.kolot.uzsearch.settings.SettingsStorage
+import proj.kolot.uzsearch.settings.RequestStorage
+import javax.inject.Inject
 
 /**
  * Created by Kolot Liza on 11/29/17.
  */
 class StartupReceiver: BroadcastReceiver() {
+    @Inject
+    lateinit var requestStorage: RequestStorage
+    @Inject
+    lateinit var repeater: SearchRepeater
 
+
+    init {
+        MainApplication.graph.inject(this)
+    }
     override fun onReceive(context: Context, intent: Intent) {
         Log.e("my test","sturtupreceiver")
-        var settingsStorage: SettingsStorage =  SettingsStorage()
-        var repeater: SearchRepeater = SearchRepeaterImpl()
-        repeater.runRepeatingTask(settingsStorage.needPeriodically(), settingsStorage.getPeriod())
+        runAllTask()
     }
+
+    private fun runAllTask() {
+        val runnable = object : Runnable {
+            override fun run() {
+                synchronized(repeater) {
+                    try {
+
+                        var list = requestStorage.getRequestByNeedPeriodic(true)
+                        list.forEach {
+
+                            repeater.runRepeatingTask(it.id ?: -1, true, it.period ?: 0)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("my test", " exception in broadcast receiver")
+                    }
+
+                }
+            }
+        }
+        val thread = Thread(runnable)
+        thread.start()
+
+    }
+
 }
