@@ -11,25 +11,26 @@ import com.arellomobile.mvp.MvpFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import kotlinx.android.synthetic.main.fragment_list_train.*
+import kotlinx.android.synthetic.main.fragment_list_train.view.*
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.TransportRoute
-import proj.kolot.uzsearch.utils.inflate
+import proj.kolot.uzsearch.task.edit.EditTaskActivity
 
 //import com.arellomobile.mvp.presenter.ProvidePresenter
 
-class ListTrainFragment : MvpFragment(), ListTrainView {
+class RouteFragment : MvpFragment(), RouteView {
 
 
     @InjectPresenter(type = PresenterType.LOCAL, tag = "ListTrainPresenter")
 
 
-    lateinit var presenter: TrainListPresenter
+    lateinit var presenter: RoutePresenter
 
     companion object {
         private val ARGUMENT_ID = "argument_id_route"
 
-        fun newIntent(id: Int): ListTrainFragment {
-            val fragment: ListTrainFragment = ListTrainFragment()
+        fun newIntent(id: Int): RouteFragment {
+            val fragment: RouteFragment = RouteFragment()
             val arg: Bundle = Bundle()
             arg.putInt(ARGUMENT_ID, id)
             fragment.arguments = arg
@@ -42,7 +43,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
 
     fun changeData(id:Int) {
         Log.e("my test", " change data")
-        presenter.loadTrains(id)
+        presenter.changeData(id)
     }
 
     override fun showRouteName(name: String) {
@@ -94,7 +95,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
         progress.visibility = View.GONE
         message.visibility = View.GONE
         trainsView.visibility = View.VISIBLE
-        var adapter: ListTrainsAdapter = trainsView.adapter as ListTrainsAdapter;
+        var adapter: RouteAdapter = trainsView.adapter as RouteAdapter;
         adapter.setList(trains)
         updateView()
     }
@@ -107,7 +108,7 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     private val trainsView: RecyclerView by lazy {
         trains_view.setHasFixedSize(true) // <-- Lazy executed!
         trains_view.layoutManager = LinearLayoutManager(activity)
-        trains_view.adapter = ListTrainsAdapter(emptyList())
+        trains_view.adapter = RouteAdapter(emptyList())
         trains_view
     }
 
@@ -117,10 +118,20 @@ class ListTrainFragment : MvpFragment(), ListTrainView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = container?.inflate(R.layout.fragment_list_train)
+        val view = inflater.inflate(R.layout.fragment_list_train, container, false)
         Log.e("my test", " on createview in listtrainfragment")
-        presenter.loadTrains(arguments.getInt(ARGUMENT_ID))
+        presenter.showRoutes(arguments.getInt(ARGUMENT_ID))
+
+         view.fab.setOnClickListener {
+            presenter.editRoute(arguments.getInt(ARGUMENT_ID))
+        }
         return view
     }
 
+    override fun showEditRoute(id: Int) {
+        startActivity(EditTaskActivity.newIntent(this.activity, id))
+    }
+
 }
+
+

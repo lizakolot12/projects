@@ -2,19 +2,15 @@ package proj.kolot.uzsearch.di
 
 import dagger.Module
 import dagger.Provides
-import proj.kolot.uzsearch.settings.RequestStorage
-import proj.kolot.uzsearch.settings.SettingsStorage
+import proj.kolot.uzsearch.storage.Storage
 import javax.inject.Singleton
 
 @Module
-class SettingsStorageModule {
+class StorageModule {
 
 
-    @Provides
-    @Singleton
-    fun provideSettings() : SettingsStorage = SettingsStorage()
 
     @Provides
     @Singleton
-    fun provideRequestStorage() : RequestStorage = RequestStorage()
+    fun provideStorage() : Storage = Storage()
 }

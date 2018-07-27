@@ -11,7 +11,7 @@ import android.util.Log
 import proj.kolot.uzsearch.R
 
 
-class ContentActivity : AppCompatActivity() {
+class RouteActivity : AppCompatActivity() {
 
     private var fragment: Fragment? = null
 
@@ -20,7 +20,7 @@ class ContentActivity : AppCompatActivity() {
         private val ARGUMENT_ID = "argument_id"
 
         fun newIntent(context: Context, id:Int): Intent {
-            val intent = Intent(context, ContentActivity::class.java)
+            val intent = Intent(context, RouteActivity::class.java)
             intent.putExtra(ARGUMENT_ID, id)
             return intent
         }
@@ -32,43 +32,6 @@ class ContentActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         changeFragment()
-
-
-
-
-
-
-        //var listFiltersInit = mutableListOf<ItemSeatFilter>(filter1, filter2)
-    /*    var route = Route("stationFromId",
-                "stationFromName",
-                "stationToId",
-                "stationToName",
-                "numberTrain",
-                LocalDateTime.now().toDate(),
-                false,
-                1)
-
-        var help = HelperFactory.helper
-        help?.getRouteDAO()?.create(route)
-
-
-        var filter1 = ItemSeatFilter("nameSeat", 5, route)
-
-        var filter2 = ItemSeatFilter("nameSeat2", 12, route)
-
-        HelperFactory.helper?.getFilterDAO()?.create(filter1)
-        HelperFactory.helper?.getFilterDAO()?.create(filter2)
-
-
-        var allRoutes = help?.getRouteDAO()?.getAllRoutes()*/
-        
-       
-
-
-
-
-
-
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -77,17 +40,17 @@ class ContentActivity : AppCompatActivity() {
     }
 
     private fun changeData(){
-        if (fragment is ListTrainFragment) {
+        if (fragment is RouteFragment) {
             var id:Int? = intent?.getIntExtra(ARGUMENT_ID, -1)
-            Log.e("my test", " on new intent in content activity id = " + id)
-            (fragment as ListTrainFragment).changeData(id?:-1)
+            Log.e("my test", " on new intent in route activity id = " + id)
+            (fragment as RouteFragment).changeData(id?:-1)
         }
     }
     fun changeFragment() {
         fragment = fragmentManager.findFragmentByTag(NAME_FRAGMENT_CONTENT)
         if (fragment == null) {
             val ft = fragmentManager.beginTransaction();
-            fragment = ListTrainFragment.newIntent(intent.getIntExtra(ARGUMENT_ID,-1))
+            fragment = RouteFragment.newIntent(intent.getIntExtra(ARGUMENT_ID,-1))
             /*    ft.setCustomAnimations(
                         R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_popup_enter, R.anim.abc_popup_exit);*/
             ft.replace(R.id.fragment, fragment, NAME_FRAGMENT_CONTENT);

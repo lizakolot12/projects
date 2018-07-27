@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list.db
+package proj.kolot.uzsearch.storage.db
 
 import com.j256.ormlite.dao.ForeignCollection
 import com.j256.ormlite.field.DataType

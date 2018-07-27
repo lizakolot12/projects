@@ -3,6 +3,7 @@
     <string name="app_name">Найди свой поезд</string>
     <string name="search_train">Найти поезд</string>
     <string name="settings_data_title">Данные для поиска</string>
+
     <string name="message_expired_date">Дата для поиска уже прошла</string>
     <string name="message_empty_list">Поезда не найдены. Попробуйте изменить параметры поиска</string>
     <string name="message_no_data_for_search">Для поиска поездов возпользуйтесь главной кнопкой</string>
@@ -40,8 +41,8 @@
     <string name="period_one_day">1 день</string>
     <string name="period_one_week">1 неделя</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_task_list">TaskListActivity</string>
+    <string name="action_task_context_delete">Удалить</string>
+    <string name="title_activity_task_list">Маршруты для поиска</string>
 
 
 </resources>

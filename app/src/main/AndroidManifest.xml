@@ -17,10 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".settings.SettingsActivity"
-            android:launchMode="singleTask" />
+            android:name=".task.list.TaskListActivity"
+            android:label="@string/title_activity_task_list"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".route.ContentActivity"
+            android:name=".task.edit.EditTaskActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".route.RouteActivity"
             android:launchMode="singleTask">
 
         </activity>
@@ -46,16 +57,7 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="proj.kolot.uzsearch" />
 
-        <activity
-            android:name=".list.TaskListActivity"
-            android:label="@string/title_activity_task_list"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

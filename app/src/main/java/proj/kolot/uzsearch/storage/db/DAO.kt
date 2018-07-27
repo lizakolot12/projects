@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list.db
+package proj.kolot.uzsearch.storage.db
 
 import com.j256.ormlite.dao.BaseDaoImpl
 import com.j256.ormlite.support.ConnectionSource
@@ -9,6 +9,7 @@ class RouteDAO : BaseDaoImpl<Route, Integer> {
                 dataClass: Class<Route>) : super(connectionSource, dataClass) {
 
     }
+
 
     /*
 
@@ -27,6 +28,8 @@ class RouteDAO : BaseDaoImpl<Route, Integer> {
     fun getRoutesByNeedPeriodic(needPeriodic: Boolean): List<Route> {
         return this.queryForEq("need_periodic_check", needPeriodic)
     }
+
+
 }
 
 

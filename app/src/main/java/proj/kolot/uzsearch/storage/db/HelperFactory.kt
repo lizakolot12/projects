@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.list.db
+package proj.kolot.uzsearch.storage.db
 
 import android.content.Context
 import com.j256.ormlite.android.apptools.OpenHelperManager

@@ -18,7 +18,9 @@ class SearchRepeaterImpl : SearchRepeater {
     init {
         MainApplication.graph.inject(this)
     }
-
+    companion object {
+        val DEFAULT_PERIOD_REPEATING = AlarmManager.INTERVAL_DAY
+    }
 
     override fun runRepeatingTask(id: Int, on: Boolean, repeatingInterval: Long) {
         var intent: Intent = SearchService.newIntent(context, id)

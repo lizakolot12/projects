@@ -2,12 +2,13 @@ package proj.kolot.uzsearch.route
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import proj.kolot.uzsearch.data.TransportRoute
 
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
-interface ListTrainView : MvpView {
+interface RouteView : MvpView {
     //@StateStrategyType(value = SkipStrategy::class)
     fun showProgress()
 
@@ -19,4 +20,7 @@ interface ListTrainView : MvpView {
     fun showErrorMessage(msg: String)
     fun showErrorMessage(err: Error)
     fun hideErrorMessage()
+
+    @StateStrategyType(value = OneExecutionStateStrategy::class)
+    fun showEditRoute(id:Int)
 }

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.util.Log
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.main.SearchRepeater
-import proj.kolot.uzsearch.settings.RequestStorage
+import proj.kolot.uzsearch.storage.Storage
 import javax.inject.Inject
 
 /**
@@ -14,7 +14,7 @@ import javax.inject.Inject
  */
 class StartupReceiver: BroadcastReceiver() {
     @Inject
-    lateinit var requestStorage: RequestStorage
+    lateinit var requestStorage: Storage
     @Inject
     lateinit var repeater: SearchRepeater
 

@@ -28,7 +28,7 @@ class TrainsRouteSearcherImpl : TrainsRouteSearcher {
             var result = routeSearchService.findRoutes(stationFrom, stationTo, departureDate)
             result.forEach({
                 list.add(proj.kolot.uzsearch.data.TransportRoute(it.id, it.name, transformStation(it.from),
-                        transformStation(it.till), it.departureDate, it.arrivalDate, it.travelTime, transformSeatType(it.freeSeatsCountByType)))
+                        transformStation(it.to), it.departureDate, it.arrivalDate, it.travelTime, transformSeatType(it.freeSeatsCountByType)))
             })
             response.list = list
         } catch(ex: Exception) {

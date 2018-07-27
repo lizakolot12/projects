@@ -14,7 +14,7 @@ import proj.kolot.uzsearch.data.TransportRoute
 import java.util.*
 
 
-class ListTrainsAdapter : RecyclerView.Adapter<ListTrainsAdapter.ViewHolder> {
+class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
     companion object {
         val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd MMM HH:mm")
     }

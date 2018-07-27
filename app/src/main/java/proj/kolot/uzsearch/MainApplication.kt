@@ -3,10 +3,9 @@ package proj.kolot.uzsearch
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
-import kotlinx.android.synthetic.main.settings_fragment.*
 import org.slf4j.LoggerFactory
 import proj.kolot.uzsearch.di.*
-import proj.kolot.uzsearch.list.db.HelperFactory
+import proj.kolot.uzsearch.storage.db.HelperFactory
 
 
 //import android.support.multidex.MultiDex
@@ -45,7 +44,7 @@ class MainApplication : Application() {
         graph = DaggerAppComponent.builder()
                 .contextModule(ContextModule(this))
                 .trainsModule(TrainsModule())
-                .settingsStorageModule(SettingsStorageModule())
+                .storageModule(StorageModule())
                 .repeaterModule(RepeaterModule())
                 .build()
         //first = DaggerAppComponent.builder().contextModule(ContextModule(this)).build()

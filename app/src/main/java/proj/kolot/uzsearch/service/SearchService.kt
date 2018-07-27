@@ -12,11 +12,11 @@ import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.Response
 import proj.kolot.uzsearch.data.SeatType
+import proj.kolot.uzsearch.data.Task
 import proj.kolot.uzsearch.data.TransportRoute
 import proj.kolot.uzsearch.main.TrainsProvider
-import proj.kolot.uzsearch.route.ContentActivity
-import proj.kolot.uzsearch.settings.RequestStorage
-import proj.kolot.uzsearch.settings.SettingsStorage
+import proj.kolot.uzsearch.route.RouteActivity
+import proj.kolot.uzsearch.storage.Storage
 import java.util.Collections.emptyMap
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class SearchService : IntentService("SearchService") {
     @Inject
     lateinit var trainsProvider: TrainsProvider
     @Inject
-    lateinit var requestStorage: RequestStorage
+    lateinit var requestStorage: Storage
 
     init {
         MainApplication.graph.inject(this)
@@ -55,8 +55,8 @@ class SearchService : IntentService("SearchService") {
 
     private fun searchTrains(intent: Intent) {
         val id: Int = intent.getIntExtra(ARGUMENT_ID, -1)
-        val  settings:SettingsStorage.Settings = requestStorage.getRequestById(id)
-        var result: Response = trainsProvider.getTrains(settings)
+        val task: Task = requestStorage.getRequestById(id)
+        var result: Response = trainsProvider.getTrains(task)
         if (needNotification(result)) {
             showFoundTrains(result.list as List<TransportRoute>)
         }
@@ -75,7 +75,7 @@ class SearchService : IntentService("SearchService") {
 
 
     fun showFoundTrains(trains: List<TransportRoute>) {
-        var intent: Intent = Intent(baseContext, ContentActivity::class.java)
+        var intent: Intent = Intent(baseContext, RouteActivity::class.java)
         var pendingIntent: PendingIntent = PendingIntent.getActivity(baseContext, 1, intent, FLAG_ACTIVITY_CLEAR_TOP)
         var notif: NotificationCompat.Builder = NotificationCompat.Builder(baseContext)
         notif.setTicker(getString(R.string.notification_title))

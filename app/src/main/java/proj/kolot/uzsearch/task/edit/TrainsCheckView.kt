@@ -1,4 +1,4 @@
-package proj.kolot.uzsearch.settings
+package proj.kolot.uzsearch.task.edit
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -10,7 +10,7 @@ import proj.kolot.uzsearch.data.TransportRoute
 interface TrainsCheckView: MvpView {
     fun showFoundTrains(trains:List<TransportRoute>)
     fun runRepeatingTask(on:Boolean, repeatingInterval:Long)
-    fun setListenerRepeating(repeatingTaskListener:RepeatingTaskListener)
+    fun setListenerRepeating(repeatingTaskListener: RepeatingTaskListener)
 }
 
 interface RepeatingTaskListener {
