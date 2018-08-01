@@ -19,9 +19,9 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
 
 
     companion object {
-        val ID_ERROR_STATION_FROM: Integer = Integer(0)
-        val ID_ERROR_STATION_TO: Integer = Integer(1)
-        val ID_ERROR_DATE: Integer = Integer(2)
+        val ID_ERROR_STATION_FROM: Int = 0
+        val ID_ERROR_STATION_TO: Int = 1
+        val ID_ERROR_DATE: Int = 2
         val TAG_STATION_FROM: String = "from"
         val TAG_STATION_TO: String = "to"
     }
@@ -157,7 +157,7 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
     }
 
     private fun getIdSeatFilter(): Int {
-        var id = 0
+        var id:Int
         do {
             id = idSeatFilter++
         } while (unsavedTask?.seatFilters?.filter { it.id == id }?.size ?: 0 > 0)
@@ -180,7 +180,7 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
     }
 
     private fun handleInputData(): Int {
-        var errors: ArrayList<Integer> = java.util.ArrayList()
+        var errors: ArrayList<Int> = java.util.ArrayList()
         if (unsavedTask?.stationFrom?.name.isNullOrBlank() || unsavedTask?.stationFrom?.id.isNullOrBlank()) errors.add(EditTaskPresenter.ID_ERROR_STATION_FROM)
         if (unsavedTask?.stationTo?.name.isNullOrBlank() || unsavedTask?.stationTo?.id.isNullOrBlank()) errors.add(EditTaskPresenter.ID_ERROR_STATION_TO)
         if (unsavedTask?.dateRoute == null) errors.add(EditTaskPresenter.ID_ERROR_DATE)

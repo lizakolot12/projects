@@ -22,7 +22,7 @@ fun filterRoutes(source: List<TransportRoute>, filters: Map<String, Int>): List<
             rout.freeSeatsCountByType?.filter { seat ->
                 //System.out.println(seat.key.id + "   "+ needName + "  " +(seat.key.id == needName) )
                 seat.key.id == needName }
-                    ?.forEach { seatType, amountPlace ->
+                    ?.forEach { _, amountPlace ->
                        // System.out.println(needName + "  " + amountPlace + "  >= " + needAmount + "   " + ((amountPlace >= needAmount)))
                         if (amountPlace >= needAmount) {
                             result = true

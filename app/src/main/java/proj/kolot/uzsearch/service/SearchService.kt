@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.util.Log
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.Response
@@ -30,6 +32,9 @@ class SearchService : IntentService("SearchService") {
     @Inject
     lateinit var requestStorage: Storage
 
+    private var id: Int = -1
+    private var task: Task? = null
+
     init {
         MainApplication.graph.inject(this)
     }
@@ -45,6 +50,7 @@ class SearchService : IntentService("SearchService") {
     }
 
     override fun onHandleIntent(intent: Intent) {
+        Log.e("my test", " on handle intent seaarch service " + intent.getIntExtra(ARGUMENT_ID, -1))
         if (!isNetworkAvailableAndConnected()) {
             return
         }
@@ -54,9 +60,9 @@ class SearchService : IntentService("SearchService") {
     }
 
     private fun searchTrains(intent: Intent) {
-        val id: Int = intent.getIntExtra(ARGUMENT_ID, -1)
-        val task: Task = requestStorage.getRequestById(id)
-        var result: Response = trainsProvider.getTrains(task)
+        id = intent.getIntExtra(ARGUMENT_ID, -1)
+        task = requestStorage.getRequestById(id)
+        var result: Response = trainsProvider.getTrains(task as Task)
         if (needNotification(result)) {
             showFoundTrains(result.list as List<TransportRoute>)
         }
@@ -75,17 +81,20 @@ class SearchService : IntentService("SearchService") {
 
 
     fun showFoundTrains(trains: List<TransportRoute>) {
-        var intent: Intent = Intent(baseContext, RouteActivity::class.java)
-        var pendingIntent: PendingIntent = PendingIntent.getActivity(baseContext, 1, intent, FLAG_ACTIVITY_CLEAR_TOP)
+        var intent: Intent = RouteActivity.newIntent(baseContext,id )
+        intent.data = Uri.parse(id.toString())
+        var pendingIntent: PendingIntent = PendingIntent.getActivity(baseContext, id, intent, FLAG_ACTIVITY_CLEAR_TOP)
+
+
         var notif: NotificationCompat.Builder = NotificationCompat.Builder(baseContext)
         notif.setTicker(getString(R.string.notification_title))
                 .setSmallIcon(R.drawable.ic_train_white_18dp)
-                .setContentTitle(getString(R.string.notification_title))
+                .setContentTitle(getString(R.string.notification_title) + ":"+ task?.stationFrom?.name + " -> " + task?.stationTo?.name)
                 .setContentText(getContentText(trains))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
         var nm: NotificationManagerCompat = NotificationManagerCompat.from(applicationContext)
-        nm.notify(0, notif.build())
+        nm.notify(id, notif.build())
 
     }
 

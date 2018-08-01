@@ -1,19 +1,22 @@
 package proj.kolot.uzsearch.task.edit
 
+import android.view.View
+import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
 import android.widget.Filterable
 import kotlinx.android.synthetic.main.item_station.view.*
+import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.utils.inflate
 
 
 class StationAutoCompleteAdapter : BaseAdapter, Filterable {
-    private val mContext: android.content.Context
+
     val mPresenter: EditTaskPresenter
     private var mResults: List<proj.kolot.uzsearch.data.Station>? = null
 
 
-    constructor(mContext: android.content.Context, presenter: EditTaskPresenter, initial: List<proj.kolot.uzsearch.data.Station> = emptyList()) : super() {
-        this.mContext = mContext
+    constructor(presenter: EditTaskPresenter, initial: List<proj.kolot.uzsearch.data.Station> = emptyList()) : super() {
         mResults = initial
         mPresenter = presenter
     }
@@ -31,9 +34,9 @@ class StationAutoCompleteAdapter : BaseAdapter, Filterable {
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+    override fun getView(position: Int, convertView:View?, parent: ViewGroup): View {
         var convertViewNew = convertView
-        convertViewNew = convertViewNew ?: parent.inflate(proj.kolot.uzsearch.R.layout.item_station)
+        convertViewNew = convertViewNew ?: parent.inflate(R.layout.item_station)
         val station = getItem(position)
         convertViewNew.stationName.text = station.name
 
@@ -43,12 +46,12 @@ class StationAutoCompleteAdapter : BaseAdapter, Filterable {
     // Assign the data to the FilterResults
 
 
-    override fun getFilter(): android.widget.Filter {
+    override fun getFilter(): Filter {
 
-        val filter = object : android.widget.Filter() {
-            override fun performFiltering(constraint: CharSequence?): android.widget.Filter.FilterResults {
+        val filter = object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
 
-                val filterResults = android.widget.Filter.FilterResults()
+                val filterResults =Filter.FilterResults()
                 if (constraint != null) {
                     val stations = findStations(constraint.toString())
                     filterResults.values = stations
@@ -57,7 +60,7 @@ class StationAutoCompleteAdapter : BaseAdapter, Filterable {
                 return filterResults
             }
 
-            override fun publishResults(constraint: CharSequence?, results: android.widget.Filter.FilterResults?) {
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 if (results != null && results.count > 0) {
                     mResults = results.values as List<proj.kolot.uzsearch.data.Station>
                     notifyDataSetChanged()

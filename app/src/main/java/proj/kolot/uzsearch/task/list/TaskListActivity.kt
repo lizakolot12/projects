@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import proj.kolot.uzsearch.R.id
 import proj.kolot.uzsearch.R.layout
+import proj.kolot.uzsearch.R.string.title_activity_task_list
 import proj.kolot.uzsearch.task.edit.EditTaskActivity
 
 
@@ -42,10 +43,11 @@ class TaskListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_task_list);
         val toolbar: Toolbar = findViewById(id.toolbar) as Toolbar
-        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar)
+        setTitle(title_activity_task_list)
 
         val fab: FloatingActionButton = findViewById(id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             startActivity(EditTaskActivity.newIntent(baseContext, -1))
         }
 

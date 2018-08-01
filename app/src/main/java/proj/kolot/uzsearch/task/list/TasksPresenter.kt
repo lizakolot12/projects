@@ -39,7 +39,7 @@ class TasksPresenter : MvpPresenter<TasksView>() {
         repeater.runRepeatingTask(task.id?:-1, task.needPeriodicCheck, task.period ?:-1)
     }
 
-    public fun loadTasks() {
+    fun loadTasks() {
         list = requestStorage.getAllRequest().toMutableList()
         viewState.showTasks(list?: emptyList())
     }
@@ -51,7 +51,8 @@ class TasksPresenter : MvpPresenter<TasksView>() {
     fun  clickLong(task: Task) {
         requestStorage.delete(task)
         list?.remove(task)
-        viewState.showTasks(list?: emptyList())
+        repeater.runRepeatingTask(task.id?:-1, false, 0)
+        //viewState.showTasks(list?: emptyList())
     }
 
 

@@ -32,6 +32,7 @@ class TaskListFragment: MvpFragment(), TasksView {
 
             override fun onItemLongClick(task: Task) {
                 presenter.clickLong(task)
+
             }
 
         })

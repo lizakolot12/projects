@@ -36,7 +36,10 @@ class RouteFragment : MvpFragment(), RouteView {
             fragment.arguments = arg
             return fragment
         }
+
+
     }
+
     override fun showErrorMessage(err: Error) {
         showErrorMessage(getMsgByCodeError(err))
     }
@@ -56,9 +59,7 @@ class RouteFragment : MvpFragment(), RouteView {
                     Error.DATE_EXPIRED -> R.string.message_expired_date
                     Error.NOT_SAVED_DATA -> R.string.message_no_data_for_search
                     Error.EMPTY_LIST -> R.string.message_empty_list
-                    else -> {
-                        R.string.message_no_data_for_search
-                    }
+                    else -> R.string.message_no_data_for_search
                 }
         return getString(msg)
     }
@@ -117,12 +118,16 @@ class RouteFragment : MvpFragment(), RouteView {
         Log.e("my test", " on resume list train fragment")
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.e("my test", " on Create ROUTE FRAGMENT")
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list_train, container, false)
-        Log.e("my test", " on createview in listtrainfragment")
         presenter.showRoutes(arguments.getInt(ARGUMENT_ID))
 
-         view.fab.setOnClickListener {
+        view.fab.setOnClickListener {
             presenter.editRoute(arguments.getInt(ARGUMENT_ID))
         }
         return view
@@ -131,6 +136,8 @@ class RouteFragment : MvpFragment(), RouteView {
     override fun showEditRoute(id: Int) {
         startActivity(EditTaskActivity.newIntent(this.activity, id))
     }
+
+
 
 }
 

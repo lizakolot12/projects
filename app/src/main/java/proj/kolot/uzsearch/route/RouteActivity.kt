@@ -36,29 +36,29 @@ class RouteActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        changeData()
+        Log.e("my test", "DIFFERANT INTENT " + intent?.getIntExtra(ARGUMENT_ID, -1) + "   " + this.intent?.getIntExtra(ARGUMENT_ID, -1))
+        setIntent(intent)
+        changeData(intent?.getIntExtra(ARGUMENT_ID, -1))
+
     }
 
-    private fun changeData(){
+    private fun changeData(id: Int?) {
         if (fragment is RouteFragment) {
-            var id:Int? = intent?.getIntExtra(ARGUMENT_ID, -1)
             Log.e("my test", " on new intent in route activity id = " + id)
             (fragment as RouteFragment).changeData(id?:-1)
         }
     }
     fun changeFragment() {
-        fragment = fragmentManager.findFragmentByTag(NAME_FRAGMENT_CONTENT)
-        if (fragment == null) {
-            val ft = fragmentManager.beginTransaction();
-            fragment = RouteFragment.newIntent(intent.getIntExtra(ARGUMENT_ID,-1))
+        val ft = fragmentManager.beginTransaction()
+        fragment = RouteFragment.newIntent(intent.getIntExtra(ARGUMENT_ID,-1))
+        Log.e("my test", " create fragment id = " + intent.getIntExtra(ARGUMENT_ID, -1))
             /*    ft.setCustomAnimations(
                         R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_popup_enter, R.anim.abc_popup_exit);*/
-            ft.replace(R.id.fragment, fragment, NAME_FRAGMENT_CONTENT);
-            ft.commit()
-        } else {
-            changeData()
+        ft.replace(R.id.fragment, fragment, NAME_FRAGMENT_CONTENT);
+        ft.commit()
+
         }
 
-    }
 
 }
+

@@ -13,7 +13,7 @@ import proj.kolot.uzsearch.moxy.AddToEndAndRemoveById
 @StateStrategyType(value = AddToEndSingleStrategy::class)
 interface EditTaskView : MvpView {
 
-    fun showErrorInputData(list: List<Integer>)
+    fun showErrorInputData(list: List<Int>)
     fun hideErrorInputData(tag:String)
     fun setInitialDate()
     fun setInitialTime()

@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.SystemClock
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.service.SearchService
@@ -24,10 +25,11 @@ class SearchRepeaterImpl : SearchRepeater {
 
     override fun runRepeatingTask(id: Int, on: Boolean, repeatingInterval: Long) {
         var intent: Intent = SearchService.newIntent(context, id)
-        var pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
+        intent.data = Uri.parse(id.toString())
+        var pendingIntent: PendingIntent = PendingIntent.getService(context, id, intent, 0)
         var am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (on) {
-            am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + repeatingInterval,
+            am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() ,//+ repeatingInterval,
                     repeatingInterval, pendingIntent)
         } else {
             am.cancel(pendingIntent)

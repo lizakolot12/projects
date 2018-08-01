@@ -17,26 +17,14 @@ import proj.kolot.uzsearch.data.Task
 /**
  * Created by Kolot Liza on 6/6/18.
  */
-class TaskAdapter : RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+class TaskAdapter(private var list: List<Task>) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     companion object {
         val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd MMM HH:mm")
     }
 
-   /* @Inject
-    lateinit var context: Context
 
-    init {
-        MainApplication.graph.inject(this)
-
-    }*/
-
-    private var list: List<Task> = ArrayList()
     private var itemListener: TaskAdapter.OnItemTaskClickListener? = null
     private var btnRunListener: TaskAdapter.OnRunTaskClickListener? = null
-
-    constructor(list: List<Task>) {
-        this.list = list
-    }
 
     fun setOnItemTaskClickListener(listener: TaskAdapter.OnItemTaskClickListener) {
         this.itemListener = listener
@@ -51,37 +39,28 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): TaskAdapter.ViewHolder {
-        var v = from(viewGroup.context).inflate(R.layout.item_task, viewGroup, false)
-        //  v.setOnClickListener {listener?.onClick(list[i]) }
-        return TaskAdapter.ViewHolder(v);
-    }
-
-
-    override fun onBindViewHolder(viewHolder: TaskAdapter.ViewHolder, i: Int) {
-        var task: Task = list[i]
-
-        var descriptionRoute = task.stationFrom?.name + " - " + task.stationTo?.name + "  " + LOCALE_DATE_TIME_FORMATTER.print(task.dateRoute)
-
-        viewHolder.idTask = task.id
-        viewHolder.description.text = descriptionRoute
-        viewHolder.itemView.setOnClickListener { itemListener?.onItemClick(list[i]) }
+        val v = from(viewGroup.context).inflate(R.layout.item_task, viewGroup, false)
+        val viewHolder = TaskAdapter.ViewHolder(v)
+        viewHolder.itemView.setOnClickListener { itemListener?.onItemClick(viewHolder.task) }
 
         viewHolder.btnRun.setOnClickListener({
-            btnRunListener?.onClick(task)
+            btnRunListener?.onClick(viewHolder.task)
 
-            viewHolder.btnRun.setImageResource(getImageForRunBtn(task.needPeriodicCheck))
+            viewHolder.btnRun.setImageResource(getImageForRunBtn(viewHolder.task.needPeriodicCheck))
 
         })
-        viewHolder.btnRun.setImageResource(getImageForRunBtn(task.needPeriodicCheck))
+
         viewHolder.itemView.setOnLongClickListener { v: View ->
-            var popupMenu: PopupMenu = PopupMenu(v.context, v)
+            val popupMenu: PopupMenu = PopupMenu(v.context, v)
             popupMenu.inflate(R.menu.menu_task_list)
             popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
                     when (item?.itemId) {
-                        R.id.action_delete -> itemListener?.onItemLongClick(task)
+                        R.id.action_delete -> {
+                            itemListener?.onItemLongClick(list[i])
+                            notifyItemRemoved(i)
+                        }
                     }
-                 //   popupMenu.dismiss()
                     return false
                 }
 
@@ -89,6 +68,19 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             popupMenu.show()
             true
         }
+        return viewHolder
+    }
+
+
+
+
+    override fun onBindViewHolder(viewHolder: TaskAdapter.ViewHolder, i: Int) {
+        viewHolder.task = list[i]
+        val descriptionRoute =  viewHolder.task.stationFrom?.name + " - " + viewHolder.task.stationTo?.name + "  " + LOCALE_DATE_TIME_FORMATTER.print(viewHolder.task.dateRoute)
+        viewHolder.description.text = descriptionRoute
+
+        viewHolder.btnRun.setImageResource(getImageForRunBtn(viewHolder.task.needPeriodicCheck ?:false))
+
     }
 
     private fun getImageForRunBtn(needPeriodicCheck: Boolean): Int {
@@ -105,19 +97,17 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
 
-    class ViewHolder : RecyclerView.ViewHolder {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var idTask: Int? = null
+        lateinit var task:Task
         var description: TextView
         var btnRun: ImageButton
 
-
-        constructor(itemView: View) : super(itemView) {
+        init {
             description = itemView.task_description as TextView
             btnRun = itemView.run as ImageButton
-
-
         }
+
 
     }
 

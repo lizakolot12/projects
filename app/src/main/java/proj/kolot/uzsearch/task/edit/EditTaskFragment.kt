@@ -55,15 +55,12 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
         val intent = RouteActivity.newIntent(activity, id)
         startActivity(intent)
         activity.finish()
-        Log.e("my test", " show result for button search")
     }
 
     override fun showAllTask() {
         activity.finish()
         val intent = TaskListActivity.newIntent(activity)
         startActivity(intent)
-
-        Log.e("my test", " show all task in edit task fragment")
     }
 
     override fun setInitialSettings(task: Task?) {
@@ -74,7 +71,7 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
         train_number_value.setText(unsavedTask?.numberTrain)
     }
 
-    override fun showErrorInputData(list: List<Integer>) {
+    override fun showErrorInputData(list: List<Int>) {
         var msg: String = ""
         list.forEach {
             when (it) {
@@ -126,12 +123,12 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
             if (station != null) {
                 initial.add(station)
             }
-            var adapter = StationAutoCompleteAdapter(context, presenter, initial)
+            var adapter = StationAutoCompleteAdapter(presenter, initial)
             setAdapter(adapter)
             setLoadingIndicator(progressBar)
             onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
-                val station = adapterView.getItemAtPosition(position) as Station
-                presenter.onInputStation(tag, station)
+                val stationClicked = adapterView.getItemAtPosition(position) as Station
+                presenter.onInputStation(tag, stationClicked)
             }
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {
@@ -203,13 +200,13 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
             val range = 0..adapter.count - 1
             var setItem = 0
             for (i in range) {
-                if (adapter.getItem(i).equals(seatFilter?.code)) {
+                if (adapter.getItem(i).equals(seatFilter.code)) {
                     setItem = i
                     break
                 }
             }
             spinner.setSelection(setItem)
-            layout.filter_number.setText(seatFilter?.amount.toString())
+            layout.filter_number.setText(seatFilter.amount.toString())
         }
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -260,7 +257,7 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
                     unsavedTask?.stationFrom?.name = textField
                     unsavedTask?.stationFrom?.id = ""
                 }
-                android.util.Log.e("my test", " init id balnk")
+
             }
             EditTaskPresenter.TAG_STATION_TO -> {
                 if (!textField.equals(unsavedTask?.stationTo?.name)) {

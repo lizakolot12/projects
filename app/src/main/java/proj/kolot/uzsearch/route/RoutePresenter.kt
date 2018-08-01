@@ -1,7 +1,6 @@
 package proj.kolot.uzsearch.route
 
 import android.os.AsyncTask
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import org.joda.time.LocalDateTime
@@ -13,7 +12,7 @@ import proj.kolot.uzsearch.main.TrainsProvider
 import proj.kolot.uzsearch.storage.Storage
 import javax.inject.Inject
 
-//https://habrahabr.ru/post/275255/
+
 @InjectViewState
 class RoutePresenter : MvpPresenter<RouteView>() {
     @Inject
@@ -33,8 +32,6 @@ class RoutePresenter : MvpPresenter<RouteView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        Log.e("my test", " on first view attach trains presenter " + viewState)
-
 
     }
 
@@ -44,9 +41,9 @@ class RoutePresenter : MvpPresenter<RouteView>() {
 
 
     private fun loadTrains() {
-        Log.e("my test", " load trains presenter+ " + viewState)
         var err: Error;
         task = requestStorage.getRequestById(taskId?:-1)
+        viewState.showRouteName( "" + task?.stationFrom?.name + " - " + task?.stationTo?.name)
         var dateSearch: LocalDateTime? = task?.dateRoute
         when {
             (dateSearch == null) -> {
@@ -71,23 +68,21 @@ class RoutePresenter : MvpPresenter<RouteView>() {
 
         override fun onPreExecute() {
             super.onPreExecute()
-            Log.e("my test", " on pre execute must begin to show progress")
             viewState.showProgress()
         }
 
         override fun doInBackground(vararg params: Void?): Response {
-            Log.e("my test", " do in background load trains request to server uz!")
             return trainsProvider.getTrains(task as Task)
         }
 
-        override fun onPostExecute(result: Response) {
+        override fun onPostExecute(result: Response?) {
             viewState.hideProgress()
-            viewState.showRouteName( "" + task?.stationFrom?.name + " - " + task?.stationTo?.name)
-            if (result.list == null || result.list?.isEmpty() ?: true) {
-                if (result?.message == null || result?.message?.isBlank() ?: false) {
+
+            if (result?.list == null || result.list?.isEmpty() ?: true) {
+                if (result?.message == null || result.message?.isBlank() ?: false) {
                     viewState.showErrorMessage(Error.EMPTY_LIST)
                 } else {
-                    viewState.showErrorMessage(result?.message ?: "")
+                    viewState.showErrorMessage(result.message ?: "")
                 }
             } else {
                 viewState.hideErrorMessage()
@@ -107,7 +102,6 @@ class RoutePresenter : MvpPresenter<RouteView>() {
     }
 
     fun  changeData(id: Int) {
-        Log.e("my test", " change data old id = " + taskId + "   newid = " + id )
         taskId = id
         loadTrains()
     }

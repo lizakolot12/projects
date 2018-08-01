@@ -17,7 +17,6 @@ class MainApplication : Application() {
 
     companion object {
         lateinit var graph: AppComponent
-        // lateinit var first: FirstComponent
         lateinit var instance: MainApplication
             private set
 
@@ -39,7 +38,6 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         HelperFactory.setHelper(getApplicationContext());
-       // logging()
         instance = this
         graph = DaggerAppComponent.builder()
                 .contextModule(ContextModule(this))
@@ -47,36 +45,9 @@ class MainApplication : Application() {
                 .storageModule(StorageModule())
                 .repeaterModule(RepeaterModule())
                 .build()
-        //first = DaggerAppComponent.builder().contextModule(ContextModule(this)).build()
+
 
     }
-
-/*    private fun logging() {
-        //add проверку разрешенний
-        val fileHandler: FileLogHandlerConfiguration? = LoggerConfiguration.fileLogHandler(this)
-        LoggerConfiguration.configuration().addHandlerToRootLogger(fileHandler)
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) === PackageManager.PERMISSION_GRANTED) {
-            val appDirectory = File(Environment.getExternalStorageDirectory().toURI())
-            val logDirectory = File(appDirectory.toString())
-
-            fileHandler?.setFullFilePathPattern(logDirectory.toString() + "/my_log.%g.%u.log")
-            LoggerConfiguration.configuration().addHandlerToRootLogger(fileHandler)
-            if (fileHandler != null) {
-                val logFileName: String? = fileHandler?.currentFileName
-                LOG.debug("log initizializing " + logFileName);
-                Log.e("my test", "file name = $logFileName")
-            }
-        } else {
-            requestMultiplePermissions()
-        }
-    }
-
-    fun requestMultiplePermissions() {
-        var PERMISSION_REQUEST_CODE = 1
-        ActivityCompat.requestPermissions(this.applicationContext,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE
-        )
-    }*/
 
 }
 

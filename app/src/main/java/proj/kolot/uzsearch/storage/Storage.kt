@@ -90,13 +90,13 @@ class Storage {
     }
 
     fun getRequestById(id: Int): Task {
-        val route = routeDAO?.getRouteById(Integer(id))
+        val route = routeDAO?.getRouteById(id)
         return transformSettingFromRoute(route)
     }
 
     fun delete(task: Task) {
         val id = task.id ?: -1
-        routeDAO?.deleteById(Integer(id))
+        routeDAO?.deleteById(id)
     }
 
 

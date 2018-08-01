@@ -37,7 +37,6 @@ class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         var train: TransportRoute = mList[i]
-        var places: String = viewHolder.itemView.context.getString(R.string.places)
         var dateDeparture: String = LOCALE_DATE_TIME_FORMATTER.print(train.departureDate)
         var dateArrival: String = LOCALE_DATE_TIME_FORMATTER.print(train.arrivalDate)
         var seats: String = ""
@@ -45,8 +44,6 @@ class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
             seats += map.key.id + "=" + map.value + "     "
         }
 
-        var description = train.name + "  \n" + places + ":" + seats + "   \n" +
-                dateDeparture + "  \n" + dateArrival + "  "
         viewHolder.idTrain.text = train.id
         viewHolder.nameTrain.text = train.name
         viewHolder.seats.text = seats
