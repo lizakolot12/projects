@@ -13,9 +13,10 @@ buildscript {
         maven { url "https://mvn.arello-mobile.com/" }
         maven { url "https://jitpack.io" }
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:3.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
 
@@ -33,5 +34,6 @@ allprojects {
         maven {
             url "https://jitpack.io"
         }
+        google()
     }
 }

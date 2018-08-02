@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import android.widget.ArrayAdapter.createFromResource
 import com.arellomobile.mvp.MvpFragment
@@ -278,9 +279,17 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
 
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (arguments.getInt(EditTaskFragment.ARGUMENT_ID)>0){
+            activity?.getWindow()?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layout.settings_fragment, container, false)
         Log.e("my test", " on create view edit task fragment")
+
         presenter.setTaskId(arguments.getInt(EditTaskFragment.ARGUMENT_ID))
         view.btn_add_line.setOnClickListener { presenter.addFilterLine() }
         view.search.setOnClickListener {
