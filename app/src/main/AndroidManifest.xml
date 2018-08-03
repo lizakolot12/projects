@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
    <!-- <uses-permission android:name="android.permission.READ_LOGS" />-->
 
     <application
@@ -27,10 +28,15 @@
         </activity>
         <activity
             android:name=".task.edit.EditTaskActivity"
-            android:launchMode="singleTop" />
+             />
         <activity
             android:name=".route.RouteActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:parentActivityName=".task.list.TaskListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".task.list.TaskListActivity"/>
+
 
         </activity>
 
