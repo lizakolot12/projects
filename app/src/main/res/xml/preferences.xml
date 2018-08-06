@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_title_category_notif">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pref_type_sound"
+            android:entryValues="@array/pref_type_sound"
+            android:key="@string/pref_key_type_ringtone"
+            android:title="@string/pref_title_sound" />
+        <RingtonePreference
+            android:enabled="false"
+            android:key="@string/pref_key_uri_ringtone"
+            android:showSilent="true"
+            android:summary="@string/pref_type_sound_melody"
+            android:title="@string/pref_title_ringtone"
+            android:defaultValue="true"
+            android:showDefault="true"
+            android:ringtoneType="all" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_vibrate"
+            android:title="@string/pref_title_vibrate" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_duration"
+            android:title="@string/pref_title_duration"
+            android:summary="@string/pref_summary_duration"/>
+    </PreferenceCategory>
+</PreferenceScreen>

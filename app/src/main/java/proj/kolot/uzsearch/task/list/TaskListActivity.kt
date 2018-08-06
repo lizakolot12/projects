@@ -5,16 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import proj.kolot.uzsearch.MainActivity
 import proj.kolot.uzsearch.R.id
 import proj.kolot.uzsearch.R.layout
 import proj.kolot.uzsearch.R.string.title_activity_task_list
 import proj.kolot.uzsearch.task.edit.EditTaskActivity
 
 
-class TaskListActivity : AppCompatActivity() {
+class TaskListActivity : MainActivity() {
     private var fragment: Fragment? = null
 
     companion object {

@@ -7,37 +7,33 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-   <!-- <uses-permission android:name="android.permission.READ_LOGS" />-->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/main_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".task.list.TaskListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".task.edit.EditTaskActivity"
-             />
+        <activity android:name=".task.edit.EditTaskActivity" />
         <activity
             android:name=".route.RouteActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".task.list.TaskListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".task.list.TaskListActivity"/>
-
-
+                android:value=".task.list.TaskListActivity" />
         </activity>
 
         <service android:name=".service.SearchService" />
@@ -61,7 +57,11 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="proj.kolot.uzsearch" />
 
-
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".NastroykiActivvity" />
     </application>
 
 </manifest>

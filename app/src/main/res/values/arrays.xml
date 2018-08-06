@@ -23,4 +23,19 @@
         <item>К</item>
         <item>Л</item>
     </string-array>
+
+
+    <string-array name="pref_type_sound">
+        <item>@string/pref_type_sound_ring</item>
+        <item>@string/pref_type_sound_notification</item>
+        <item>@string/pref_type_sound_alarm</item>
+        <item>@string/pref_type_sound_melody</item>
+
+    </string-array>
+  <!--  <string-array name="pref_type_sound_value">
+        <item >Звонка</item>
+        <item>Уведомления </item>
+        <item>Будильника</item>
+        <item>Выбрать мелодию</item>
+    </string-array>-->
 </resources>

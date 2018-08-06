@@ -1,13 +1,13 @@
 package proj.kolot.uzsearch.task.edit
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import proj.kolot.uzsearch.MainActivity
 import proj.kolot.uzsearch.R
 
 
-class EditTaskActivity : AppCompatActivity() {
+class EditTaskActivity : MainActivity() {
 
 
     companion object {
@@ -27,7 +27,7 @@ class EditTaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("my test", " on create edittaskactivity")
-        setContentView(R.layout.settings_activity)
+        setContentView(R.layout.edit_task_activity)
         setTitle(proj.kolot.uzsearch.R.string.settings_data_title)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
