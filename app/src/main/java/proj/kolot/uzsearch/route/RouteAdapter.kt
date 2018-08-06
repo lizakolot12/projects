@@ -11,35 +11,39 @@ import org.joda.time.format.DateTimeFormatter
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.SeatType
 import proj.kolot.uzsearch.data.TransportRoute
-import java.util.*
 
 
-class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
+class RouteAdapter(list: List<TransportRoute>) : RecyclerView.Adapter<RouteAdapter.ViewHolder>() {
     companion object {
         val LOCALE_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern("dd MMM HH:mm")
     }
 
-    private var mList: List<TransportRoute> = ArrayList()
+    private var mList: List<TransportRoute> = list
+    var onItemClickListener: OnItemClickListener? = null
+        get(){
+            return  field
+        }
+        set(value){
+                field = value
+        }
 
-    constructor(list: List<TransportRoute>) {
-        mList = list
-    }
 
     fun setList(list: List<TransportRoute>) {
         this.mList = list
     }
 
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        var v = LayoutInflater.from(viewGroup.context).inflate(R.layout.train_item_layout, viewGroup, false);
+        val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.train_item_layout, viewGroup, false);
         return ViewHolder(v);
     }
 
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        var train: TransportRoute = mList[i]
-        var dateDeparture: String = LOCALE_DATE_TIME_FORMATTER.print(train.departureDate)
-        var dateArrival: String = LOCALE_DATE_TIME_FORMATTER.print(train.arrivalDate)
-        var seats: String = ""
+        val train: TransportRoute = mList[i]
+        val dateDeparture: String = LOCALE_DATE_TIME_FORMATTER.print(train.departureDate)
+        val dateArrival: String = LOCALE_DATE_TIME_FORMATTER.print(train.arrivalDate)
+        var seats = ""
         for (map: Map.Entry<SeatType, Int> in train.freeSeatsCountByType ?: emptyMap()) {
             seats += map.key.id + "=" + map.value + "     "
         }
@@ -50,6 +54,12 @@ class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
         viewHolder.infoFrom.text = dateDeparture
         viewHolder.infoTo.text = dateArrival
 
+        viewHolder.itemView.setOnClickListener({
+            onItemClickListener?.onItemClick(train)
+        }
+        )
+
+
 
     }
 
@@ -58,7 +68,7 @@ class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
     }
 
 
-    class ViewHolder : RecyclerView.ViewHolder {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var idTrain: TextView
         var nameTrain:TextView
@@ -66,17 +76,19 @@ class RouteAdapter : RecyclerView.Adapter<RouteAdapter.ViewHolder> {
         var infoTo: TextView
         var seats: TextView
 
-
-
-        constructor(itemView: View) : super(itemView) {
+        init {
             idTrain = itemView.train_id as TextView
             nameTrain = itemView.name_train as TextView
             infoFrom = itemView.info_from as TextView
             infoTo = itemView.info_to as TextView
             seats = itemView.seats as TextView
-
         }
+
 
     }
 
+
+    interface OnItemClickListener {
+        fun onItemClick(transportRoute: TransportRoute)
+    }
 }

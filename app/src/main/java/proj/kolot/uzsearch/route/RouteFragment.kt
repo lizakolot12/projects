@@ -1,5 +1,8 @@
 package proj.kolot.uzsearch.route
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +17,10 @@ import kotlinx.android.synthetic.main.fragment_list_train.*
 import kotlinx.android.synthetic.main.fragment_list_train.view.*
 import proj.kolot.uzsearch.R
 import proj.kolot.uzsearch.data.TransportRoute
+import proj.kolot.uzsearch.route.RouteAdapter.OnItemClickListener
 import proj.kolot.uzsearch.task.edit.EditTaskActivity
+import java.net.URL
+
 
 //import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -96,11 +102,23 @@ class RouteFragment : MvpFragment(), RouteView {
         progress.visibility = View.GONE
         message.visibility = View.GONE
         trainsView.visibility = View.VISIBLE
-        var adapter: RouteAdapter = trainsView.adapter as RouteAdapter;
+        var adapter: RouteAdapter = trainsView.adapter as RouteAdapter
+        adapter.onItemClickListener = object :OnItemClickListener{
+            override fun onItemClick(transportRoute: TransportRoute) {
+                presenter.onItemClick(transportRoute)
+            }
+
+        }
         adapter.setList(trains)
         updateView()
     }
 
+    override fun showTrain(route: TransportRoute) {
+        val url: URL? = route.url
+        val intent = Intent(ACTION_VIEW)
+        intent.setData(Uri.parse(url.toString()))
+        startActivity(intent)
+    }
     fun updateView() {
         Log.e("my test", " update view ")
         trainsView.adapter.notifyDataSetChanged()

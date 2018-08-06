@@ -23,4 +23,5 @@ interface RouteView : MvpView {
 
     @StateStrategyType(value = OneExecutionStateStrategy::class)
     fun showEditRoute(id:Int)
-}
+
+    fun showTrain(route: TransportRoute) }

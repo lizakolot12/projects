@@ -107,4 +107,9 @@ class RoutePresenter : MvpPresenter<RouteView>() {
     }
 
 
+    fun onItemClick(transportRoute: TransportRoute) {
+        viewState.showTrain(transportRoute)
+    }
+
+
 }
