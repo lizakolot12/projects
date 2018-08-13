@@ -37,6 +37,9 @@ class TaskAdapter(private var list: List<Task>) : RecyclerView.Adapter<TaskAdapt
     fun setList(list: List<Task>) {
         this.list = list
     }
+    fun getList():List<Task>{
+        return list
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): TaskAdapter.ViewHolder {
         val v = from(viewGroup.context).inflate(R.layout.item_task, viewGroup, false)
@@ -51,7 +54,7 @@ class TaskAdapter(private var list: List<Task>) : RecyclerView.Adapter<TaskAdapt
         })
 
         viewHolder.itemView.setOnLongClickListener { v: View ->
-            val popupMenu: PopupMenu = PopupMenu(v.context, v)
+            val popupMenu = PopupMenu(v.context, v)
             popupMenu.inflate(R.menu.menu_task_list)
             popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem?): Boolean {

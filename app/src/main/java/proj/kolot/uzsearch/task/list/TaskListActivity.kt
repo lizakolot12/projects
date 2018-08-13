@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import proj.kolot.uzsearch.MainActivity
 import proj.kolot.uzsearch.R.id
 import proj.kolot.uzsearch.R.layout
@@ -21,9 +20,8 @@ class TaskListActivity : MainActivity() {
         private val NAME_FRAGMENT_TSK_LIST = "list_task"
 
         fun newIntent(context: Context): Intent {
-            val intent = Intent(context, TaskListActivity::class.java)
 
-            return intent
+            return Intent(context, TaskListActivity::class.java)
         }
     }
     override fun onNewIntent(intent: Intent?) {
@@ -33,8 +31,6 @@ class TaskListActivity : MainActivity() {
 
     private fun changeData(){
         if (fragment is TaskListFragment) {
-
-            Log.e("my test", " on new intent in task list activity ")
             (fragment as TaskListFragment).changeData()
         }
     }

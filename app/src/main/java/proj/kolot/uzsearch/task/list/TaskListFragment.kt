@@ -1,9 +1,9 @@
 package proj.kolot.uzsearch.task.list;
 
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.fragment_task_list.*
 import proj.kolot.uzsearch.R.layout.fragment_task_list
 import proj.kolot.uzsearch.data.Task
 import proj.kolot.uzsearch.route.RouteActivity
+
+
 
 
 class TaskListFragment: MvpFragment(), TasksView {
@@ -51,12 +53,18 @@ class TaskListFragment: MvpFragment(), TasksView {
         return view
     }
 
-    override fun showTasks(settings: List<Task>) {
+    override fun onResume() {
+        super.onResume()
+        presenter.resume()
 
+    }
+    override fun showTasks(tasks: List<Task>) {
         var adapter: TaskAdapter = taskListView.adapter as TaskAdapter;
-        adapter.setList(settings)
-        Log.e("my test", " update view tasks total = " + settings.size)
-        taskListView.adapter.notifyDataSetChanged()
+        val taskDiffUtilCallback = TaskDiffUtilCallback(adapter.getList(), tasks)
+        val taskDiffResult = DiffUtil.calculateDiff(taskDiffUtilCallback)
+
+        adapter.setList(tasks)
+        taskDiffResult.dispatchUpdatesTo(adapter)
 
     }
 

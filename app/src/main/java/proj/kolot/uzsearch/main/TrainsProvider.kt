@@ -1,6 +1,5 @@
 package proj.kolot.uzsearch.main
 
-import android.util.Log
 import org.joda.time.LocalDateTime
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.data.*
@@ -25,18 +24,16 @@ class TrainsProvider {
 
     fun getTrains(task:Task):Response {
         this. task = task
-        var result: Response = trainsSearcher.getTrains(task.stationFrom ?: Station("", ""),
+        val result: Response = trainsSearcher.getTrains(task.stationFrom ?: Station("", ""),
                 task.stationTo ?: Station("", ""), task.dateRoute ?: LocalDateTime.now())
-        var list:List<TransportRoute> = processingResult(result)
+        val list:List<TransportRoute> = processingResult(result)
         return Response(result.message, list)
     }
 
     private fun processingResult(result: Response): List<TransportRoute> {
         val filters = task?.seatFilters
-        val mapFilters: Map<String, Int> = convertListToMap(filters)
         val list: List<TransportRoute>? = result.list
-        Log.e("my test", " map filters size " + mapFilters.size)
-        var filteredList = if (list == null) emptyList() else filterRoutes(list, mapFilters)
+        var filteredList = if (list == null) emptyList() else filterRoutes(list,  convertListToMap(filters))
         val filterNumberTrain = task?.numberTrain
         if (!filterNumberTrain.isNullOrEmpty()) {
             filteredList = filteredList.filter { it.id == filterNumberTrain }

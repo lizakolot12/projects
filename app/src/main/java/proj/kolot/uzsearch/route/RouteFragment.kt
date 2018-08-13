@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,10 +21,7 @@ import proj.kolot.uzsearch.task.edit.EditTaskActivity
 import java.net.URL
 
 
-//import com.arellomobile.mvp.presenter.ProvidePresenter
-
 class RouteFragment : MvpFragment(), RouteView {
-
 
     @InjectPresenter(type = PresenterType.LOCAL, tag = "ListTrainPresenter")
 
@@ -50,8 +46,7 @@ class RouteFragment : MvpFragment(), RouteView {
         showErrorMessage(getMsgByCodeError(err))
     }
 
-    fun changeData(id:Int) {
-        Log.e("my test", " change data")
+    fun changeData(id: Int) {
         presenter.changeData(id)
     }
 
@@ -72,38 +67,33 @@ class RouteFragment : MvpFragment(), RouteView {
 
     override fun hideErrorMessage() {
         message.visibility = View.GONE
-        Log.e("my test", " hide error message")
     }
 
     override fun showErrorMessage(msg: String) {
         onTrainsLoaded(emptyList<TransportRoute>())
         message.visibility = View.VISIBLE
         message.text = msg
-        Log.e("my test", " show error message " + msg)
     }
 
     override fun showProgress() {
         showErrorMessage(getString(R.string.message_searching_now))
         trainsView.visibility = View.GONE
         progress.visibility = View.VISIBLE
-        Log.e("my test", "show progress and will be on trains loaded with empty list")
 
 
     }
 
     override fun hideProgress() {
         progress.visibility = View.GONE
-        Log.e("my test", " hide progress")
     }
 
 
     override fun onTrainsLoaded(trains: List<TransportRoute>) {
-        Log.e("my test", " on traines loaded ")
         progress.visibility = View.GONE
         message.visibility = View.GONE
         trainsView.visibility = View.VISIBLE
         var adapter: RouteAdapter = trainsView.adapter as RouteAdapter
-        adapter.onItemClickListener = object :OnItemClickListener{
+        adapter.onItemClickListener = object : OnItemClickListener {
             override fun onItemClick(transportRoute: TransportRoute) {
                 presenter.onItemClick(transportRoute)
             }
@@ -119,8 +109,8 @@ class RouteFragment : MvpFragment(), RouteView {
         intent.setData(Uri.parse(url.toString()))
         startActivity(intent)
     }
+
     fun updateView() {
-        Log.e("my test", " update view ")
         trainsView.adapter.notifyDataSetChanged()
     }
 
@@ -131,15 +121,8 @@ class RouteFragment : MvpFragment(), RouteView {
         trains_view
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.e("my test", " on resume list train fragment")
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.e("my test", " on Create ROUTE FRAGMENT")
-    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list_train, container, false)
@@ -154,7 +137,6 @@ class RouteFragment : MvpFragment(), RouteView {
     override fun showEditRoute(id: Int) {
         startActivity(EditTaskActivity.newIntent(this.activity, id))
     }
-
 
 
 }

@@ -20,12 +20,6 @@ class RouteAdapter(list: List<TransportRoute>) : RecyclerView.Adapter<RouteAdapt
 
     private var mList: List<TransportRoute> = list
     var onItemClickListener: OnItemClickListener? = null
-        get(){
-            return  field
-        }
-        set(value){
-                field = value
-        }
 
 
     fun setList(list: List<TransportRoute>) {

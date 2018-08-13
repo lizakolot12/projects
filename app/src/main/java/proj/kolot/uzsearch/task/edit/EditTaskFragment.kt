@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.LayoutInflater.from
 import android.view.View
@@ -72,20 +71,23 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
         train_number_value.setText(unsavedTask?.numberTrain)
     }
 
-    override fun showErrorInputData(list: List<Int>) {
+    override fun showErrorInputData(list: List<EditTaskPresenter.Companion.Errors>) {
         var msg: String = ""
         list.forEach {
             when (it) {
-                EditTaskPresenter.ID_ERROR_STATION_FROM -> {
+                EditTaskPresenter.Companion.Errors.ID_ERROR_STATION_FROM -> {
                     msg += getString(string.error_station_from) + "\n"
                     container_station_from.error = getString(string.error_station_from)
                 }
-                EditTaskPresenter.ID_ERROR_STATION_TO -> {
+                EditTaskPresenter.Companion.Errors.ID_ERROR_STATION_TO -> {
                     msg += getString(string.error_station_to) + "\n"
                     container_station_to.error = getString(string.error_station_to)
                 }
-                EditTaskPresenter.ID_ERROR_DATE -> {
+                EditTaskPresenter.Companion.Errors.ID_ERROR_DATE -> {
                     msg += getString(string.error_date)
+                }
+                else -> {
+                    msg = getString(string.error_save_data)
                 }
             }
         }
@@ -274,9 +276,6 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        Log.e("my test", " on create edit task fragment")
-
-
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -288,8 +287,6 @@ class EditTaskFragment : MvpFragment(), EditTaskView, DatePickerDialog.OnDateSet
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layout.settings_fragment, container, false)
-        Log.e("my test", " on create view edit task fragment")
-
         presenter.setTaskId(arguments.getInt(EditTaskFragment.ARGUMENT_ID))
         view.btn_add_line.setOnClickListener { presenter.addFilterLine() }
         view.search.setOnClickListener {

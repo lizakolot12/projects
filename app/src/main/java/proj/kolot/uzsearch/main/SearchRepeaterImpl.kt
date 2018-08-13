@@ -24,10 +24,10 @@ class SearchRepeaterImpl : SearchRepeater {
     }
 
     override fun runRepeatingTask(id: Int, on: Boolean, repeatingInterval: Long) {
-        var intent: Intent = SearchService.newIntent(context, id)
+        val intent: Intent = SearchService.newIntent(context, id)
         intent.data = Uri.parse(id.toString())
-        var pendingIntent: PendingIntent = PendingIntent.getService(context, id, intent, 0)
-        var am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent: PendingIntent = PendingIntent.getService(context, id, intent, 0)
+        val am: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (on) {
             am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() ,//+ repeatingInterval,
                     repeatingInterval, pendingIntent)
@@ -39,8 +39,8 @@ class SearchRepeaterImpl : SearchRepeater {
 
 
     fun isServiceAlarmOn(context: Context): Boolean {
-        var intent: Intent = Intent(context, SearchService::class.java)
-        var pendingIntent: PendingIntent? = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        val intent: Intent = Intent(context, SearchService::class.java)
+        val pendingIntent: PendingIntent? = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
         return pendingIntent != null
     }
 

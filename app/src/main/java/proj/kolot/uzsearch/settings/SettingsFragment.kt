@@ -1,10 +1,11 @@
-package proj.kolot.uzsearch
+package proj.kolot.uzsearch.settings
 
 import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.*
+import proj.kolot.uzsearch.R
 
 
 class SettingsFragment : PreferenceFragment() {

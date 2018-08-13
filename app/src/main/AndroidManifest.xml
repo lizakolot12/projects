@@ -36,6 +36,11 @@
                 android:value=".task.list.TaskListActivity" />
         </activity>
 
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+
         <service android:name=".service.SearchService" />
 
         <receiver android:name=".service.StartupReceiver">
@@ -57,11 +62,6 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="proj.kolot.uzsearch" />
 
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".NastroykiActivvity" />
     </application>
 
 </manifest>

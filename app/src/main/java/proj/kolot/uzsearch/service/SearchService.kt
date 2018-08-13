@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.support.v4.app.NotificationManagerCompat
-import android.util.Log
 import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.data.Response
 import proj.kolot.uzsearch.data.Task
@@ -34,17 +33,16 @@ class SearchService : IntentService("SearchService") {
     }
 
     companion object {
-        private val ARGUMENT_ID = "argument_id_route_for_service"
+        private const val ARGUMENT_ID = "argument_id_route_for_service"
 
         fun newIntent(context:Context, id: Int): Intent {
-            var intent: Intent = Intent(context, SearchService::class.java)
+            val intent: Intent = Intent(context, SearchService::class.java)
             intent.putExtra(ARGUMENT_ID, id)
             return intent
         }
     }
 
     override fun onHandleIntent(intent: Intent) {
-        Log.e("my test", " on handle intent seaarch service " + intent.getIntExtra(ARGUMENT_ID, -1))
         if (!isNetworkAvailableAndConnected()) {
             return
         }
@@ -56,7 +54,7 @@ class SearchService : IntentService("SearchService") {
     private fun searchTrains(intent: Intent) {
         id = intent.getIntExtra(ARGUMENT_ID, -1)
         task = requestStorage.getRequestById(id)
-        var result: Response = trainsProvider.getTrains(task as Task)
+        val result: Response = trainsProvider.getTrains(task as Task)
         if (needNotification(result)) {
             showFoundTrains(result.list as List<TransportRoute>)
         }
@@ -64,9 +62,9 @@ class SearchService : IntentService("SearchService") {
     }
 
     private fun isNetworkAvailableAndConnected(): Boolean {
-        var manager: ConnectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var isNetworkAvailable: Boolean = manager.getActiveNetworkInfo() != null
-        var isNetworkConnected: Boolean = isNetworkAvailable && manager.getActiveNetworkInfo().isConnected
+        val manager: ConnectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val isNetworkAvailable: Boolean = manager.getActiveNetworkInfo() != null
+        val isNetworkConnected: Boolean = isNetworkAvailable && manager.getActiveNetworkInfo().isConnected
         return isNetworkConnected
     }
 
@@ -74,15 +72,15 @@ class SearchService : IntentService("SearchService") {
 
 
 
-    fun showFoundTrains(trains: List<TransportRoute>) {
-        var nm: NotificationManagerCompat = NotificationManagerCompat.from(applicationContext)
+    private fun showFoundTrains(trains: List<TransportRoute>) {
+        val nm: NotificationManagerCompat = NotificationManagerCompat.from(applicationContext)
         nm.notify(id, NotificationFactory().createNotification(trains, task))
 
     }
 
 
 
-    fun needNotification(response: Response): Boolean {
+    private fun needNotification(response: Response): Boolean {
         return response.list != null && response.list?.size ?: 0 > 0
     }
 

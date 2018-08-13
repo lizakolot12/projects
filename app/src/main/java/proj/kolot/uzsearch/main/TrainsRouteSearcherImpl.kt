@@ -7,11 +7,11 @@ import proj.kolot.uzsearch.data.Station
 
 
 class TrainsRouteSearcherImpl : TrainsRouteSearcher {
-    val routeSearchService: UzTrainRouteSearchService = UzTrainRouteSearchService()
+    private val routeSearchService: UzTrainRouteSearchService = UzTrainRouteSearchService()
 
     override fun findStations(name: String): List<Station> {
-        var stations: List<io.github.sunlaud.findticket.model.Station> = routeSearchService.findStations(name)
-        var result: ArrayList<Station> = ArrayList<Station>(stations.size)
+        val stations: List<io.github.sunlaud.findticket.model.Station> = routeSearchService.findStations(name)
+        val result: ArrayList<Station> = ArrayList<Station>(stations.size)
         stations.forEach { result.add(transformStation(it)) }
 
         return result
@@ -19,9 +19,9 @@ class TrainsRouteSearcherImpl : TrainsRouteSearcher {
 
 
     override fun getTrains(from: Station, to: Station, departureDate: LocalDateTime): Response {
-        var stationFrom = io.github.sunlaud.findticket.model.Station(from.name?:"", from.id?:"")
-        var stationTo = io.github.sunlaud.findticket.model.Station(to.name?:"", to.id?:"")
-        var response: Response = Response()
+        val stationFrom = io.github.sunlaud.findticket.model.Station(from.name?:"", from.id?:"")
+        val stationTo = io.github.sunlaud.findticket.model.Station(to.name?:"", to.id?:"")
+        val response: Response = Response()
         try {
             var list: ArrayList<proj.kolot.uzsearch.data.TransportRoute> = ArrayList()
 
@@ -47,7 +47,6 @@ class TrainsRouteSearcherImpl : TrainsRouteSearcher {
         for (entry  in source){
             result.put(proj.kolot.uzsearch.data.SeatType(entry.key.id, entry.key.name), entry.value)
         }
-     //   source.forEach { t, u -> result.put(proj.kolot.uzsearch.data.SeatType(t.id, t.name), u) }
         return result
     }
 }

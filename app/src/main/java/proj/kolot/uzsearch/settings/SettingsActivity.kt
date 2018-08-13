@@ -1,8 +1,9 @@
-package proj.kolot.uzsearch
+package proj.kolot.uzsearch.settings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import proj.kolot.uzsearch.R
 
 class SettingsActivity : AppCompatActivity() {
 

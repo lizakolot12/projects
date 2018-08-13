@@ -3,6 +3,7 @@ package proj.kolot.uzsearch
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import proj.kolot.uzsearch.settings.SettingsActivity
 
 open class MainActivity : AppCompatActivity() {
 
@@ -12,9 +13,9 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
-   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.getItemId()
-       when (id) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        when (id) {
             R.id.action_settings -> {
                 val intent = android.content.Intent(this, SettingsActivity::class.java)
                 startActivity(intent)

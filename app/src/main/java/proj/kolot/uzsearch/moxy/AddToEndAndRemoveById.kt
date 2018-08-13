@@ -1,6 +1,5 @@
 package proj.kolot.uzsearch.moxy
 
-import android.util.Log
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.ViewCommand
 import com.arellomobile.mvp.viewstate.strategy.StateStrategy
@@ -13,7 +12,6 @@ class AddToEndAndRemoveById : StateStrategy {
     override fun <View : MvpView> beforeApply(
             currentState: MutableList<ViewCommand<View>>,
             incomingCommand: ViewCommand<View>) {
-                Log.e("my test", " begin size current state = " + currentState.size)
         val iterator = currentState.iterator()
 
         while (iterator.hasNext()) {
@@ -23,12 +21,10 @@ class AddToEndAndRemoveById : StateStrategy {
                 var idAddCom = entry.javaClass.getField("id").get(entry)
                 if (idAddCom == idRemCom) {
                     iterator.remove()
-                    Log.e("my test", " remove command add ")
                 }
             }
         }
-        Log.e("my test", " end size current state = " + currentState.size)
-        //currentState.add(incomingCommand)
+
 
     }
 

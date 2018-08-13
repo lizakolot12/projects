@@ -30,10 +30,6 @@ class RoutePresenter : MvpPresenter<RouteView>() {
     }
 
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-
-    }
 
     fun  editRoute(id: Int) {
         viewState.showEditRoute(id)

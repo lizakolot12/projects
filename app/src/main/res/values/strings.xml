@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name_test">1.0-Найди свой поезд</string>
-    <string name="app_name">Найди свой поезд</string>
+    <!--  <string name="app_name_test">1.0-Найди свой поезд</string>
+      <string name="app_name">Найди свой поезд</string>-->
     <string name="search_train">Найти поезд</string>
     <string name="settings_data_title">Данные для поиска</string>
 
@@ -26,12 +26,11 @@
     <string name="places">Свободные места</string>
 
     <string name="notification_title">Найдены поезда</string>
-    <!--  <string name="error_station_to">Выберете станцию прибытия из списка</string>
-    <string name="error_station_to">Выберете станцию прибытия из списка</string>-->
 
     <string name="error_date">Выберете дату</string>
     <string name="error_station_from">Выберете станцию отправления из списка</string>
     <string name="error_station_to">Выберете станцию прибытия из списка</string>
+    <string name="error_save_data">Произошла ошибка при сохранении данных</string>
 
 
     <string name="period_half_hour">пол часа</string>
@@ -47,28 +46,22 @@
     <string name="title_activity_settings">Настройки</string>
 
 
-    <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Уведомления</string>
-
     <string name="pref_title_new_message_notifications">Сообщать о новом уведомлении</string>
-
     <string name="pref_title_ringtone">Рингтон</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Использовать вибрацию</string>
-
     <string name="pref_title_sound">Использовать для уведомлений  мелодию</string>
-
-
     <string name="pref_title_category_notif">Настройки уведомленний</string>
+    <string name="pref_title_duration">Уведомлять как важное</string>
+
     <string name="pref_key_vibrate">pref_vibrate</string>
     <string name="pref_key_type_ringtone">pref_type_ringtone</string>
     <string name="pref_key_uri_ringtone">pref_uri_ringtone</string>
-
     <string name="pref_key_duration">pref_key_duration</string>
-    <string name="pref_title_duration">Уведомлять как важное</string>
-    <string name="pref_summary_duration">Продолжать уведомления пока пользователь не увидет его</string>
 
+
+    <string name="pref_summary_duration">Продолжать уведомления пока пользователь не увидет его</string>
     <string name="pref_type_sound_ring">Звонка</string>
     <string name="pref_type_sound_notification">Уведомления </string>
     <string name="pref_type_sound_alarm">Будильника</string>

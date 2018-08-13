@@ -16,14 +16,10 @@ fun filterRoutes(source: List<TransportRoute>, filters: Map<String, Int>): List<
     }
     processedResult = source.filter { rout ->
         var result = false
-        //System.out.println("Source list:")
         filters.forEach { needName, needAmount ->
-            //System.out.println("Map filters:")
             rout.freeSeatsCountByType?.filter { seat ->
-                //System.out.println(seat.key.id + "   "+ needName + "  " +(seat.key.id == needName) )
                 seat.key.id == needName }
                     ?.forEach { _, amountPlace ->
-                       // System.out.println(needName + "  " + amountPlace + "  >= " + needAmount + "   " + ((amountPlace >= needAmount)))
                         if (amountPlace >= needAmount) {
                             result = true
                         }

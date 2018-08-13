@@ -7,7 +7,7 @@ import android.app.AlarmManager
  */
 interface SearchRepeater {
     companion object {
-        val DEFAULT_PERIOD_REPEATING = AlarmManager.INTERVAL_DAY
+        const val DEFAULT_PERIOD_REPEATING = AlarmManager.INTERVAL_DAY
     }
     fun runRepeatingTask(id:Int, on:Boolean, repeatingInterval:Long)
 }

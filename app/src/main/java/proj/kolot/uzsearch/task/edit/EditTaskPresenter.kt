@@ -1,6 +1,5 @@
 package proj.kolot.uzsearch.task.edit
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import org.joda.time.LocalDateTime
@@ -19,9 +18,12 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
 
 
     companion object {
-        val ID_ERROR_STATION_FROM: Int = 0
-        val ID_ERROR_STATION_TO: Int = 1
-        val ID_ERROR_DATE: Int = 2
+        enum class Errors {
+            ID_ERROR_STATION_FROM,
+            ID_ERROR_STATION_TO,
+            ID_ERROR_DATE,
+            ID_ERROR_SAVE_DATA
+        }
         val TAG_STATION_FROM: String = "from"
         val TAG_STATION_TO: String = "to"
     }
@@ -70,7 +72,6 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
             EditTaskPresenter.TAG_STATION_FROM -> {
                 unsavedTask?.stationFrom = station
                 viewState.setInitialStationFrom()
-                android.util.Log.e("my test", " init id " + station.id)
             }
             EditTaskPresenter.TAG_STATION_TO -> {
                 unsavedTask?.stationTo = station
@@ -92,14 +93,9 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
         unsavedTask?.period = period
     }
 
-    override fun attachView(view: EditTaskView?) {
-        super.attachView(view)
-        Log.e("my test", " on attach view ")
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        Log.e("my test", " on first view attach" + "restore state = " + isInRestoreState(viewState))
         initView(taskId?:-1)
     }
 
@@ -179,15 +175,36 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
         return routeSearcher.findStations(nameStation)
     }
 
-    private fun handleInputData(): Int {
-        var errors: ArrayList<Int> = java.util.ArrayList()
-        if (unsavedTask?.stationFrom?.name.isNullOrBlank() || unsavedTask?.stationFrom?.id.isNullOrBlank()) errors.add(EditTaskPresenter.ID_ERROR_STATION_FROM)
-        if (unsavedTask?.stationTo?.name.isNullOrBlank() || unsavedTask?.stationTo?.id.isNullOrBlank()) errors.add(EditTaskPresenter.ID_ERROR_STATION_TO)
-        if (unsavedTask?.dateRoute == null) errors.add(EditTaskPresenter.ID_ERROR_DATE)
-        if (errors.size > 0) {
+    private fun handleInputData(operation: (Int) -> Unit) {
+        var errors: List<Errors> = validateData()
+        if (errors.isNotEmpty()) {
             viewState.showErrorInputData(errors)
-            return -1
+            return
         }
+        val id: Int = saveData()
+        if (id > -1) {
+            runService(id)
+            operation(id)
+        } else {
+            errors = ArrayList()
+            errors.add(Errors.ID_ERROR_SAVE_DATA)
+            viewState.showErrorInputData(errors)
+        }
+        return
+    }
+
+    fun searchTrains() {
+        handleInputData({ id: Int -> viewState.showResult(id) })
+
+    }
+
+
+    fun saveTrainsInfo() {
+        handleInputData({ viewState.showAllTask() })
+    }
+
+
+    private fun saveData(): Int {
         var result: Int = -1
         if (unsavedTask != null) {
             result = if (unsavedTask?.id ?: -1 > -1) {
@@ -198,24 +215,15 @@ class EditTaskPresenter : MvpPresenter<EditTaskView>() {
 
         }
         return result
-
-
     }
 
-    fun searchTrains() {
-        val id = handleInputData()
-        if (id > -1) {
-            runService(id)
-            viewState.showResult(id)
-        }
+    private fun validateData(): List<Errors> {
+        var errors: ArrayList<Errors> = ArrayList()
+        if (unsavedTask?.stationFrom?.name.isNullOrBlank() || unsavedTask?.stationFrom?.id.isNullOrBlank()) errors.add(Errors.ID_ERROR_STATION_FROM)
+        if (unsavedTask?.stationTo?.name.isNullOrBlank() || unsavedTask?.stationTo?.id.isNullOrBlank()) errors.add(Errors.ID_ERROR_STATION_TO)
+        if (unsavedTask?.dateRoute == null) errors.add(Errors.ID_ERROR_DATE)
+        return errors
     }
-
-    fun saveTrainsInfo() {
-        if (handleInputData() > 0) {
-            viewState.showAllTask()
-        }
-    }
-
     private fun runService(id:Int) {
 
         repeater.runRepeatingTask(id, unsavedTask?.needPeriodicCheck ?: false, unsavedTask?.period ?: 0)

@@ -6,11 +6,13 @@ import proj.kolot.uzsearch.MainApplication
 import proj.kolot.uzsearch.data.Task
 import proj.kolot.uzsearch.main.SearchRepeater
 import proj.kolot.uzsearch.storage.Storage
+import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by Kolot Liza on 6/6/18.
  */
+
 @InjectViewState
 class TasksPresenter : MvpPresenter<TasksView>() {
 
@@ -20,6 +22,11 @@ class TasksPresenter : MvpPresenter<TasksView>() {
     lateinit var repeater: SearchRepeater
     private var list:MutableList<Task>? = null
 
+    private var needUpdateData: Boolean = false
+    private val observer: Observer = Observer { o, arg ->
+        needUpdateData = true
+    }
+
     init {
         MainApplication.graph.inject(this)
 
@@ -27,8 +34,15 @@ class TasksPresenter : MvpPresenter<TasksView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        requestStorage.addObserver( observer)
         loadTasks()
 
+    }
+
+    override fun onDestroy() {
+        requestStorage.deleteObserver(observer)
+        super.onDestroy()
     }
     fun clickRunItem(task:Task){
         task.needPeriodicCheck = !task.needPeriodicCheck
@@ -40,6 +54,7 @@ class TasksPresenter : MvpPresenter<TasksView>() {
     }
 
     fun loadTasks() {
+        needUpdateData = false
         list = requestStorage.getAllRequest().toMutableList()
         viewState.showTasks(list?: emptyList())
     }
@@ -52,7 +67,18 @@ class TasksPresenter : MvpPresenter<TasksView>() {
         requestStorage.delete(task)
         list?.remove(task)
         repeater.runRepeatingTask(task.id?:-1, false, 0)
-        //viewState.showTasks(list?: emptyList())
+
+    }
+
+    private fun needUpdate(): Boolean {
+        var result: Boolean = needUpdateData
+        return needUpdateData
+    }
+
+    fun resume() {
+        if (needUpdate()) {
+            loadTasks()
+        }
     }
 
 

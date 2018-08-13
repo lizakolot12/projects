@@ -11,8 +11,6 @@ class EditTaskActivity : MainActivity() {
 
 
     companion object {
-
-        // private val INTENT_USER_ID = "user_id"
         private val NAME_SETTINGS_FRAGMENT = "settings_fr"
 
         private val ARGUMENT_ID = "argument_id"
@@ -26,7 +24,6 @@ class EditTaskActivity : MainActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e("my test", " on create edittaskactivity")
         setContentView(R.layout.edit_task_activity)
         setTitle(proj.kolot.uzsearch.R.string.settings_data_title)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
